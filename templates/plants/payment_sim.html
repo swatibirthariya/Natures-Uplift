@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Payment - Simulated</title></head>
+<body style="font-family:Arial;padding:20px">
+  <h2>Simulated External Payment (PhonePe / GPay)</h2>
+  <p>UPI ID: <strong>{{ upi }}</strong></p>
+  <p>Click below to simulate payment result.</p>
+  <p><a href="{% url 'payment_callback' %}?status=success">Simulate Success</a> | <a href="{% url 'payment_callback' %}?status=fail">Simulate Fail</a></p>
+</body>
+</html>

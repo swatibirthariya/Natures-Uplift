@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+  <section class="hero">
+    <h2>Welcome to Natures Uplift</h2>
+    <p>Fresh indoor plants delivered across Bangalore. Fast delivery option available.</p>
+    <p><a class="btn" href="{% url 'plant_list' %}">Shop Plants</a></p>
+  </section>
+{% endblock %}

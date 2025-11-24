@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Plants{% endblock %}
+{% block content %}
+  <h2>Plants</h2>
+  <div class="grid">
+  {% for p in plants %}
+    <div class="card">
+      {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}">{% else %}<img src="/static/images/ai_placeholder.jpg" alt="{{ p.name }}">{% endif %}
+      <h3><a href="{% url 'plant_detail' p.pk %}">{{ p.name }}</a></h3>
+      <p>{{ p.description }}</p>
+      <p><strong>Size:</strong> {{ p.size }}</p>
+      <p><strong>Price:</strong> ₹{{ p.price }}</p>
+      <p><a class="btn" href="{% url 'add_to_cart' p.pk %}">Add to cart</a></p>
+    </div>
+  {% endfor %}
+  </div>
+{% endblock %}

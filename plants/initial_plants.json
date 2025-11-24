@@ -1,0 +1,57 @@
+[
+  {
+    "model": "plants.plant",
+    "pk": 1,
+    "fields": {
+      "name": "Areca Palm",
+      "description": "Low-maintenance indoor palm, purifies air.",
+      "size": "Medium (60-90 cm)",
+      "price": "499.00",
+      "available": true
+    }
+  },
+  {
+    "model": "plants.plant",
+    "pk": 2,
+    "fields": {
+      "name": "Snake Plant",
+      "description": "Tough, thrives in low light; great for beginners.",
+      "size": "Small (20-45 cm)",
+      "price": "299.00",
+      "available": true
+    }
+  },
+  {
+    "model": "plants.plant",
+    "pk": 3,
+    "fields": {
+      "name": "Fiddle Leaf Fig",
+      "description": "Statement plant with large glossy leaves.",
+      "size": "Large (90-150 cm)",
+      "price": "1299.00",
+      "available": true
+    }
+  },
+  {
+    "model": "plants.plant",
+    "pk": 4,
+    "fields": {
+      "name": "Money Plant",
+      "description": "Fast-growing climber, easy to propagate.",
+      "size": "Small (30-60 cm)",
+      "price": "199.00",
+      "available": true
+    }
+  },
+  {
+    "model": "plants.plant",
+    "pk": 5,
+    "fields": {
+      "name": "ZZ Plant",
+      "description": "Very low water needs, great for offices.",
+      "size": "Medium (50-80 cm)",
+      "price": "599.00",
+      "available": true
+    }
+  }
+]

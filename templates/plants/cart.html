@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+  <h2>Your Cart</h2>
+  {% if items %}
+    <ul>
+      {% for it in items %}
+        <li>{{ it.plant.name }} x {{ it.qty }} — ₹{{ it.subtotal }}</li>
+      {% endfor %}
+    </ul>
+    <p><strong>Total:</strong> ₹{{ total }}</p>
+    <p><a class="btn" href="{% url 'checkout' %}">Proceed to checkout</a></p>
+  {% else %}
+    <p>Your cart is empty. <a href="{% url 'plant_list' %}">Shop now</a></p>
+  {% endif %}
+{% endblock %}

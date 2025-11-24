@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+  <h2>Checkout</h2>
+  {% if delivery_error %}<p class="error">{{ delivery_error }}</p>{% endif %}
+  <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <p><strong>UPI ID (for manual payment):</strong> 6366382516@ybl</p>
+    <button type="submit" class="btn">Proceed to Payment</button>
+  </form>
+{% endblock %}
