@@ -5,9 +5,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
-IS_RENDER = os.environ.get("RENDER") == "true"
-#DEBUG = os.getenv("RENDER", "") == ""   # DEBUG=True locally, False on Render
-#IS_RENDER = "RENDER_INTERNAL_HOSTNAME" in os.environ
+IS_RENDER = "RENDER_INTERNAL_HOSTNAME" in os.environ
 DEBUG = not IS_RENDER
 ALLOWED_HOSTS = ["*"]
 
