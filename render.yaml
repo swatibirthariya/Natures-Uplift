@@ -4,18 +4,27 @@ services:
     env: python
     region: oregon
 
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: |
+      pip install -r requirements.txt
 
-    startCommand: >
-      python manage.py migrate --noinput &&
+    startCommand: |
       gunicorn natures_uplift.wsgi:application
 
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.10
+    postDeploy:
+      - python manage.py migrate --noinput
 
+    envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: natures_uplift.settings
 
       - key: SECRET_KEY
         generateValue: true
+
+      - key: DATABASE_URL
+        fromDatabase:
+          name: natureupliftdb
+          property: connectionString
+
+databases:
+  - name: natureupliftdb
+    region: oregon
