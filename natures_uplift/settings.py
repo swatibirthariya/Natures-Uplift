@@ -21,7 +21,6 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
 ]
-SECURE_SSL_REDIRECT = False
   # Render injects host automatically
 
 
