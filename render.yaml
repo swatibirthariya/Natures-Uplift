@@ -2,13 +2,22 @@ services:
   - type: web
     name: natures-uplift
     env: python
-    plan: free
-    buildCommand: |
-      pip install -r requirements.txt
-    startCommand: gunicorn natures_uplift.wsgi:application
+    region: oregon
+
+    buildCommand: "pip install -r requirements.txt"
+
+    startCommand: >
+      python manage.py makemigrations --noinput &&
+      python manage.py migrate --noinput &&
+      gunicorn natures_uplift.wsgi:application
+
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.10
+
       - key: DJANGO_SETTINGS_MODULE
         value: natures_uplift.settings
-    preDeployCommand: |
-      python manage.py makemigrations --noinput
-      python manage.py migrate --noinput
+
+      - key: SECRET_KEY
+        generateValue: true
+
