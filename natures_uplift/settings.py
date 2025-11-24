@@ -23,7 +23,7 @@ ALLOWED_HOSTS = [
 ]
   # Render injects host automatically
 
-
+SECURE_SSL_REDIRECT = False
 # -------------------------------
 # INSTALLED APPS
 # -------------------------------
