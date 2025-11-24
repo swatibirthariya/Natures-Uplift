@@ -5,7 +5,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
-DEBUG = os.getenv("RENDER", "") == ""   # DEBUG=True locally, False on Render
+IS_RENDER = "RENDER_INTERNAL_HOSTNAME" in os.environ
+DEBUG = not IS_RENDER
+#DEBUG = os.getenv("RENDER", "") == ""   # DEBUG=True locally, False on Render
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
@@ -51,9 +53,7 @@ WSGI_APPLICATION = "natures_uplift.wsgi.application"
 # -------------------------------
 # 🔥 DATABASE CONFIG
 # -------------------------------
-
-if os.getenv("RENDER"):  
-    # Running on Render → use PostgreSQL from DATABASE_URL
+if IS_RENDER:
     DATABASES = {
         "default": dj_database_url.config(
             default=os.environ.get("DATABASE_URL"),
@@ -62,7 +62,6 @@ if os.getenv("RENDER"):
         )
     }
 else:
-    # Running locally → use your local PostgreSQL
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -73,6 +72,7 @@ else:
             "PORT": "5432",
         }
     }
+
 
 # -------------------------------
 # STATIC & MEDIA
