@@ -14,7 +14,14 @@ IS_RENDER = "RENDER_INTERNAL_HOSTNAME" in os.environ
 
 DEBUG = not IS_RENDER  # AUTO TURN OFF DEBUG ON RENDER
 
-ALLOWED_HOSTS = ["*"]  # Render injects host automatically
+ALLOWED_HOSTS = [
+    "naturesuplift.com",
+    "www.naturesuplift.com",
+    "natures-uplift-5inz.onrender.com",
+    "127.0.0.1",
+    "localhost",
+]
+  # Render injects host automatically
 
 
 # -------------------------------
