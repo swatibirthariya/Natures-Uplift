@@ -19,5 +19,3 @@ services:
 
       - key: SECRET_KEY
         generateValue: true
-
-
