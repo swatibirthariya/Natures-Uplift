@@ -4,12 +4,22 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# -------------------------------
+# SECURITY SETTINGS
+# -------------------------------
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
-IS_RENDER = "RENDER_INTERNAL_HOSTNAME" in os.environ
-#DEBUG = not IS_RENDER
-DEBUG = True
-ALLOWED_HOSTS = ["*"]
 
+# Detect if running on Render
+IS_RENDER = "RENDER_INTERNAL_HOSTNAME" in os.environ
+
+DEBUG = not IS_RENDER  # AUTO TURN OFF DEBUG ON RENDER
+
+ALLOWED_HOSTS = ["*"]  # Render injects host automatically
+
+
+# -------------------------------
+# INSTALLED APPS
+# -------------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -20,8 +30,13 @@ INSTALLED_APPS = [
     "plants",
 ]
 
+
+# -------------------------------
+# MIDDLEWARE + WHITENOISE
+# -------------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # IMPORTANT FOR RENDER STATIC FILES
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -29,6 +44,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
 
 ROOT_URLCONF = "natures_uplift.urls"
 
@@ -50,26 +66,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "natures_uplift.wsgi.application"
 
+
 # -------------------------------
-# 🔥 DATABASE CONFIG
+# DATABASES
 # -------------------------------
 if IS_RENDER:
-    # Render uses INTERNAL URL
+    # Production database (Render)
     DATABASES = {
         "default": dj_database_url.config(
             default=os.environ.get("DATABASE_URL"),
             conn_max_age=600,
-            ssl_require=True
+            ssl_require=True,
         )
     }
 else:
-    # 🔥 LOCAL POSTGRESQL HERE (your credentials)
+    # LOCAL development PostgreSQL
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
             "NAME": "nature_db",
             "USER": "nature_uplift",
-            "PASSWORD": "Rounak@123",
+            "PASSWORD": "Rounak@123",  # safe locally
             "HOST": "localhost",
             "PORT": "5432",
         }
@@ -77,15 +94,26 @@ else:
 
 
 # -------------------------------
-# STATIC & MEDIA
+# STATIC & MEDIA FILES
 # -------------------------------
 STATIC_URL = "/static/"
+
+# Location of your local static folder
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# Location where collectstatic will place files
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# WhiteNoise static compression & versioning
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+
+# -------------------------------
+# OTHER CONFIG
+# -------------------------------
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
