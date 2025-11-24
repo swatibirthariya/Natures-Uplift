@@ -6,7 +6,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 IS_RENDER = "RENDER_INTERNAL_HOSTNAME" in os.environ
-DEBUG = not IS_RENDER
+#DEBUG = not IS_RENDER
+DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
