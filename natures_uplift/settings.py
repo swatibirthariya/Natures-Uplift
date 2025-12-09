@@ -17,6 +17,7 @@ DEBUG = not IS_RENDER  # AUTO TURN OFF DEBUG ON RENDER
 ALLOWED_HOSTS = [
     "naturesuplift.com",
     "www.naturesuplift.com",
+    "natures-uplift-3.onrender.com",
     "natures-uplift-5inz.onrender.com",
     "127.0.0.1",
     "localhost",
