@@ -4,6 +4,7 @@ class CheckoutForm(forms.Form):
     name = forms.CharField(max_length=200)
     email = forms.EmailField()
     delivery_type = forms.ChoiceField(choices=(('normal','Normal (1.5 days)'),('fast','Fast (+₹50)')))
+    pincode = forms.CharField(max_length=10)
     phone = forms.CharField(
         max_length=10,
         min_length=10,
@@ -24,4 +25,4 @@ class CheckoutForm(forms.Form):
             )
 
         return phone
-        pincode = forms.CharField(max_length=10)
+       
