@@ -12,7 +12,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 # Detect if running on Render
 IS_RENDER = "RENDER_INTERNAL_HOSTNAME" in os.environ
 
-DEBUG = not IS_RENDER  # AUTO TURN OFF DEBUG ON RENDER
+#DEBUG = not IS_RENDER  # AUTO TURN OFF DEBUG ON RENDER
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "naturesuplift.com",
