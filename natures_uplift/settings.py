@@ -22,6 +22,8 @@ ALLOWED_HOSTS = [
     "cloudinary",
     "cloudinary_storage",
     "natures-uplift-5inz.onrender.com",
+    "natures-uplift-z9bl.onrender.com",
+    "shop.naturesuplift.com",
     "127.0.0.1",
     "localhost",
 ]
