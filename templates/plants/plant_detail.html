@@ -4,11 +4,14 @@
   <h2>{{ plant.name }}</h2>
 <div class="product-card">
  {% if plant.image %}
-  <a href="{{ plant.image.url }}" target="_blank" class="image-link">
-    <img src="{{ plant.image.url }}" alt="{{ plant.name }}" class="product-image">
-  </a>
+    <img
+      src="{{ plant.image.url }}"
+      alt="{{ plant.name }}"
+      class="product-image"
+      onclick="openImageModal('{{ plant.image.url }}')"
+    >
  {% else %}
-  <img src="/static/images/ai_placeholder.jpg" alt="{{ plant.name }}" class="product-image">
+ <img src="/static/images/ai_placeholder.jpg" alt="{{ plant.name }}" class="product-image">
  {% endif %}
   <div class="product-info">
     <p class="product-description">{{ plant.description }}</p>
@@ -17,4 +20,20 @@
     <a href="{% url 'add_to_cart' plant.pk %}" class="btn">Add to cart</a>
   </div>
 </div>
+<!-- ✅ MODAL HTML (HERE) -->
+<div id="imageModal" class="image-modal" onclick="closeImageModal()">
+  <img id="modalImage">
+</div>
+
+<!-- ✅ JS (HERE) -->
+<script>
+function openImageModal(src) {
+    document.getElementById("modalImage").src = src;
+    document.getElementById("imageModal").style.display = "flex";
+}
+
+function closeImageModal() {
+    document.getElementById("imageModal").style.display = "none";
+}
+</script>
 {% endblock %}
