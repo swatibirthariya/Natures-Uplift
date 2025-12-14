@@ -1,7 +1,8 @@
 import os
 import dj_database_url
 from pathlib import Path
-
+import cloudinary
+import cloudinary_storage
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # -------------------------------
@@ -18,11 +19,18 @@ ALLOWED_HOSTS = [
     "naturesuplift.com",
     "www.naturesuplift.com",
     "natures-uplift-3.onrender.com",
+    "cloudinary",
+    "cloudinary_storage",
     "natures-uplift-5inz.onrender.com",
     "127.0.0.1",
     "localhost",
 ]
   # Render injects host automatically
+cloudinary.config(
+    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key = os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
+)
 
 SECURE_SSL_REDIRECT = False
 # -------------------------------
@@ -116,7 +124,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+#MEDIA_ROOT = BASE_DIR / "media"
 
 
 # -------------------------------
