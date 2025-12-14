@@ -23,4 +23,18 @@
     </div>
   {% endfor %}
   </div>
+<div id="imageModal" class="image-modal" onclick="closeImageModal()">
+  <img id="modalImage">
+</div>
+
+<script>
+function openImageModal(src) {
+    document.getElementById("modalImage").src = src;
+    document.getElementById("imageModal").style.display = "flex";
+}
+
+function closeImageModal() {
+    document.getElementById("imageModal").style.display = "none";
+}
+</script>
 {% endblock %}
