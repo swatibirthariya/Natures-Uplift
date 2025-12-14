@@ -6,7 +6,7 @@ class Plant(models.Model):
     description = models.TextField(blank=True)
     size = models.CharField(max_length=100, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    image = models.CloudinaryField(upload_to='plants/', blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True)
     available = models.BooleanField(default=True)
 
     def __str__(self):
