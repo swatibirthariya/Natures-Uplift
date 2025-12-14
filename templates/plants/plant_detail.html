@@ -2,9 +2,18 @@
 {% block title %}{{ plant.name }}{% endblock %}
 {% block content %}
   <h2>{{ plant.name }}</h2>
-  {% if plant.image %}<img src="{{ plant.image.url }}" alt="{{ plant.name }}">{% else %}<img src="/static/images/ai_placeholder.jpg" alt="{{ plant.name }}">{% endif %}
-  <p>{{ plant.description }}</p>
-  <p><strong>Size:</strong> {{ plant.size }}</p>
-  <p><strong>Price:</strong> ₹{{ plant.price }}</p>
-  <p><a href="{% url 'add_to_cart' plant.pk %}" class="btn">Add to cart</a></p>
+<div class="product-card">
+  {% if plant.image %}
+    <img src="{{ plant.image.url }}" alt="{{ plant.name }}" class="product-image">
+  {% else %}
+    <img src="/static/images/ai_placeholder.jpg" alt="{{ plant.name }}" class="product-image">
+  {% endif %}
+
+  <div class="product-info">
+    <p class="product-description">{{ plant.description }}</p>
+    <p><strong>Size:</strong> {{ plant.size }}</p>
+    <p class="product-price">₹{{ plant.price }}</p>
+    <a href="{% url 'add_to_cart' plant.pk %}" class="btn">Add to cart</a>
+  </div>
+</div>
 {% endblock %}
