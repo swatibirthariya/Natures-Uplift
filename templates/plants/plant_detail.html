@@ -3,12 +3,13 @@
 {% block content %}
   <h2>{{ plant.name }}</h2>
 <div class="product-card">
-  {% if plant.image %}
+ {% if plant.image %}
+  <a href="{{ plant.image.url }}" target="_blank" class="image-link">
     <img src="{{ plant.image.url }}" alt="{{ plant.name }}" class="product-image">
-  {% else %}
-    <img src="/static/images/ai_placeholder.jpg" alt="{{ plant.name }}" class="product-image">
-  {% endif %}
-
+  </a>
+ {% else %}
+  <img src="/static/images/ai_placeholder.jpg" alt="{{ plant.name }}" class="product-image">
+ {% endif %}
   <div class="product-info">
     <p class="product-description">{{ plant.description }}</p>
     <p><strong>Size:</strong> {{ plant.size }}</p>
