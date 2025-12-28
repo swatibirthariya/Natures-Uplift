@@ -19,10 +19,6 @@ class Plant(models.Model):
 )
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    category = models.CharField(
-        max_length=30,
-        choices=CATEGORY_CHOICES
-    )
     size = models.CharField(max_length=50, blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     image = CloudinaryField('image', blank=True, null=True)
