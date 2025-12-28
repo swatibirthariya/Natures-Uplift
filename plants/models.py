@@ -12,7 +12,11 @@ class Plant(models.Model):
         ('flowering', 'Flowering Plants'),
         ('fruit', 'Fruit Plants'),
     ]
-
+    category = models.CharField(
+    max_length=50,
+    choices=CATEGORY_CHOICES,
+    default='indoor',  # <- default so migration is non-interactive
+)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     category = models.CharField(
