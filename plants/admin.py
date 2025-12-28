@@ -1,9 +1,29 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from .models import Plant, Order, OrderItem, Review
 
 @admin.register(Plant)
 class PlantAdmin(admin.ModelAdmin):
-    list_display = ('name','size','price','available')
+    # Show fields in list view
+    list_display = ('name', 'size', 'price', 'available', 'get_category_display', 'image_preview')
+    list_filter = ('category', 'available')  # Sidebar filter for categories
+    search_fields = ('name', 'category')
+    list_editable = ('price', 'available')
+
+    # Show image thumbnail in admin list
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="50" style="object-fit: cover;" />', obj.image.url)
+        return "-"
+    image_preview.short_description = 'Image'
+
+    # Style the category dropdown in add/edit form
+    def formfield_for_choice_field(self, db_field, request, **kwargs):
+        if db_field.name == "category":
+            kwargs['widget'].attrs.update({
+                'style': 'width: 250px; white-space: normal; font-size: 14px;'
+            })
+        return super().formfield_for_choice_field(db_field, request, **kwargs)
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
