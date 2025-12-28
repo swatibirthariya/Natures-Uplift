@@ -2,10 +2,25 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 
 class Plant(models.Model):
+
+    CATEGORY_CHOICES = [
+        ('indoor', 'Indoor Plants'),
+        ('outdoor', 'Outdoor Plants'),
+        ('low_maintenance', 'Low Maintenance Plants'),
+        ('air_purifying', 'Air Purifying Plants'),
+        ('pet_friendly', 'Pet Friendly Plants'),
+        ('flowering', 'Flowering Plants'),
+        ('fruit', 'Fruit Plants'),
+    ]
+
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    size = models.CharField(max_length=100, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    category = models.CharField(
+        max_length=30,
+        choices=CATEGORY_CHOICES
+    )
+    size = models.CharField(max_length=50, blank=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     image = CloudinaryField('image', blank=True, null=True)
     available = models.BooleanField(default=True)
 
