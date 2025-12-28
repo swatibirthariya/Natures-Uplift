@@ -1,0 +1,6 @@
+/* Make category dropdown wider in admin forms */
+#id_category {
+    width: 300px !important;
+    white-space: normal !important;
+    font-size: 14px;
+}
