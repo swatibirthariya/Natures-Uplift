@@ -4,31 +4,75 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Natures Uplift - {% block title %}{% endblock %}</title>
-  <link rel="stylesheet" href="/static/css/styles.css">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
+
 <body>
+
+  <div class="top-bar">
+    Free Delivery Above ₹499 | Next Day Delivery Available
+  </div>
+
+  <div class="breadcrumb">
+    <div class="breadcrumb-inner">
+      Air-Purifying Plants / Combo of 4 Plant Set for Office Desk
+    </div>
+  </div>
+
   <header class="site-header">
-    <div class="brand">
-      <img src="/static/images/logo.jpeg" alt="logo" class="logo">
-      <div class="brand-text">
-        <h1>Natures Uplift</h1>
-        <p class="tagline">Plants delivered across Bangalore</p>
+  <div class="header-inner">
+
+    <div class="header-left">
+      <div class="brand">
+        <img src="{% static 'images/logo.jpeg' %}" alt="logo" class="logo">
+        <div class="brand-text">
+          <h1>Natures Uplift</h1>
+          <p class="tagline">Plants delivered across Bangalore</p>
+        </div>
       </div>
     </div>
-    <nav class="nav">
-      <a href="{% url 'home' %}">Home</a>
-      <a href="{% url 'plant_list' %}">Plants</a>
-      <a href="{% url 'about' %}">About</a>
-      <a href="{% url 'contact' %}">Contact</a>
-      <a href="{% url 'reviews' %}">Reviews</a>
-      <a href="{% url 'view_cart' %}">Cart</a>
-    </nav>
+
+    <div class="header-center">
+      <nav class="nav">
+        <a href="{% url 'home' %}">Home</a>
+
+        <div class="dropdown">
+          <a href="{% url 'plant_list' %}">Plants</a>
+          <div class="dropdown-content">
+            <a href="?category=indoor">Indoor Plants</a>
+            <a href="?category=outdoor">Outdoor Plants</a>
+            <a href="?category=low-maintenance">Low Maintenance Plants</a>
+            <a href="?category=air-purifying">Air Purifying Plants</a>
+            <a href="?category=pet-friendly">Pet Friendly Plants</a>
+            <a href="?category=flowering">Flowering Plants</a>
+            <a href="?category=fruit">Fruit Plants</a>
+          </div>
+        </div>
+
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <a href="{% url 'reviews' %}">Reviews</a>
+        <a href="{% url 'view_cart' %}">Cart</a>
+      </nav>
+    </div>
+
+    <div class="header-right"></div>
+
+  </div>
+
   </header>
+
   <main class="container">
     {% block content %}{% endblock %}
   </main>
+
   <footer class="site-footer">
-    <p>&copy; Natures Uplift. GSTIN: 29AAXXXXXXX1Z5 (replace with real GSTIN). Contact: Naturesuplift71@gmail.com | 7829200380 (WhatsApp)</p>
+    <p>
+      © Natures Uplift. GSTIN: 29AAXXXXXXX1Z5 (replace with real GSTIN).
+      Contact: Naturesuplift71@gmail.com | 7829200380 (WhatsApp)
+    </p>
   </footer>
+
 </body>
 </html>
