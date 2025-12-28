@@ -24,8 +24,12 @@ def home(request):
     return render(request,'plants/home.html')
 
 def plant_list(request):
-    plants = Plant.objects.filter(available=True)
-    return render(request,'plants/plant_list.html',{'plants':plants})
+    category = request.GET.get('category')  # get category from query params
+    if category:
+        plants = Plant.objects.filter(available=True, category=category)
+    else:
+        plants = Plant.objects.none() 
+    return render(request, 'plants/plant_list.html', {'plants': plants, 'selected_category': category})
 
 def plant_detail(request, pk):
     plant = get_object_or_404(Plant, pk=pk)
