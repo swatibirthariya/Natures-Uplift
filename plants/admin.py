@@ -20,9 +20,8 @@ class PlantAdmin(admin.ModelAdmin):
     # Style the category dropdown in add/edit form
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         if db_field.name == "category":
-            kwargs['widget'].attrs.update({
-                'style': 'width: 250px; white-space: normal; font-size: 14px;'
-            })
+            if 'widget' in kwargs:
+                kwargs['widget'].attrs.update({'class': 'form-control'})
         return super().formfield_for_choice_field(db_field, request, **kwargs)
 
 class OrderItemInline(admin.TabularInline):
