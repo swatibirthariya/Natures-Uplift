@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <h2 class="auth-title">Login</h2>
+
+    <!-- ===== Messages ===== -->
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <!-- =================== -->
+
+    <p class="auth-subtitle">
+      Don't have an account?
+      <a href="{% url 'register' %}">Create account</a>
+    </p>
+
+    <div class="social-login">
+      <a href="{% url 'social_login' 'facebook' %}" class="social-btn fb">
+        <i class="fa-brands fa-facebook-f"></i> Facebook
+      </a>
+      <a href="{% url 'social_login' 'google' %}" class="social-btn google">
+        <i class="fa-brands fa-google"></i> Google
+      </a>
+    </div>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {{ form.username }}
+      {{ form.password }}
+
+      <div class="forgot">
+        <a href="{% url 'forgot_password' %}">Forgot your password?</a>
+      </div>
+
+      <button type="submit" class="auth-submit">SIGN IN</button>
+    </form>
+
+    <a href="/" class="back-store">Return to Store</a>
+
+  </div>
+</div>
+{% endblock %}
