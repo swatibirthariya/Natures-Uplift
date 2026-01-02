@@ -1,6 +1,8 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 
+
+
 class Plant(models.Model):
 
     CATEGORY_CHOICES = [
@@ -12,13 +14,13 @@ class Plant(models.Model):
         ('flowering', 'Flowering Plants'),
         ('fruit', 'Fruit Plants'),
     ]
-    category = models.CharField(
-    max_length=50,
-    choices=CATEGORY_CHOICES,
-    default='indoor',  # <- default so migration is non-interactive
-)
+
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+    category = models.CharField(
+        max_length=30,
+        choices=CATEGORY_CHOICES
+    )
     size = models.CharField(max_length=50, blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     image = CloudinaryField('image', blank=True, null=True)
@@ -26,7 +28,6 @@ class Plant(models.Model):
 
     def __str__(self):
         return self.name
-
 class Order(models.Model):
     order_id = models.CharField(max_length=64, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
