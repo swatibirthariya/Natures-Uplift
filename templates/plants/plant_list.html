@@ -2,11 +2,51 @@
 {% block title %}Plants{% endblock %}
 {% block content %}
 
+<h2>Plants</h2>
+<div class="category-bar">
+  <a href="{% url 'plant_list' %}"
+     class="{% if not selected_category %}active{% endif %}">
+     All
+  </a>
+
+  <a href="{% url 'plant_list' %}?category=indoor"
+     class="{% if selected_category == 'indoor' %}active{% endif %}">
+     Indoor
+  </a>
+
+  <a href="{% url 'plant_list' %}?category=outdoor"
+     class="{% if selected_category == 'outdoor' %}active{% endif %}">
+     Outdoor
+  </a>
+
+  <a href="{% url 'plant_list' %}?category=low_maintenance"
+     class="{% if selected_category == 'low_maintenance' %}active{% endif %}">
+     Low Maintenance
+  </a>
+
+  <a href="{% url 'plant_list' %}?category=air_purifying"
+     class="{% if selected_category == 'air_purifying' %}active{% endif %}">
+     Air Purifying
+  </a>
+
+  <a href="{% url 'plant_list' %}?category=fruit"
+     class="{% if selected_category == 'fruit' %}active{% endif %}">
+     Fruits Plants
+  </a>
+
+  <a href="{% url 'plant_list' %}?category=flowering"
+     class="{% if selected_category == 'flowering' %}active{% endif %}">
+     Flowering Plants
+  </a>
+</div>
+   
 {% if selected_category %}
-  <h2>Plants</h2>
-  <div class="grid">
-  {% for p in plants %}
-<div class="card">
+  <p>Showing category: <strong>{{ selected_category|title }}</strong></p>
+{% endif %}
+
+<div class="grid">
+{% for p in plants %}
+  <div class="card">
     <a href="javascript:void(0);" onclick="openImageModal('{{ p.image.url }}')">
       {% if p.image %}
         <img src="{{ p.image.url }}" alt="{{ p.name }}">
@@ -14,33 +54,30 @@
         <img src="/static/images/ai_placeholder.jpg" alt="{{ p.name }}">
       {% endif %}
     </a>
-      <h3>{{ p.name }}</h3>
-      <p>{{ p.description }}</p>
-      <p><strong>Size:</strong> {{ p.size }}</p>
-      <p><strong>Price:</strong> ₹{{ p.price }}</p>
-      <p><a class="btn" href="{% url 'add_to_cart' p.pk %}">Add to cart</a></p>
-      {% empty %}
-        <p>No plants found for this category.</p>
-    </div>
-  {% endfor %}
+
+    <h3>{{ p.name }}</h3>
+    <p>{{ p.description }}</p>
+    <p><strong>Size:</strong> {{ p.size }}</p>
+    <p><strong>Price:</strong> ₹{{ p.price }}</p>
+    <p><a class="btn" href="{% url 'add_to_cart' p.pk %}">Add to cart</a></p>
   </div>
+{% empty %}
+  <p>No plants found for this category.</p>
+{% endfor %}
+</div>
 
 <div id="imageModal" class="image-modal" onclick="closeImageModal()">
-    <img id="modalImage">
+  <img id="modalImage">
 </div>
 
 <script>
 function openImageModal(src) {
-    const modal = document.getElementById("imageModal");
-    const img = document.getElementById("modalImage");
-    img.src = src;
-    modal.style.display = "flex";  // show modal
+  document.getElementById("modalImage").src = src;
+  document.getElementById("imageModal").style.display = "flex";
 }
-
 function closeImageModal() {
-    document.getElementById("imageModal").style.display = "none";
+  document.getElementById("imageModal").style.display = "none";
 }
 </script>
-{% endif %}
 
 {% endblock %}
