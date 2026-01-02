@@ -20,6 +20,8 @@ class Plant(models.Model):
     category = models.CharField(
         max_length=30,
         choices=CATEGORY_CHOICES
+        blank=True,
+        null=True
     )
     size = models.CharField(max_length=50, blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
