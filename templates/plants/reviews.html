@@ -1,17 +1,53 @@
 {% extends "base.html" %}
 {% block title %}Reviews{% endblock %}
+
 {% block content %}
-  <h2>Customer Reviews</h2>
-  <form method="post">{% csrf_token %}
-    <p><label>Name: <input name="name" required></label></p>
-    <p><label>Rating: <input name="rating" type="number" min="1" max="5" value="5"></label></p>
-    <p><label>Message:<br><textarea name="message" rows="4" cols="50"></textarea></label></p>
+<h2>Customer Reviews</h2>
+
+{# ✅ Success / info messages #}
+{% if messages %}
+  {% for message in messages %}
+    <div class="success-message">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="review-form-card">
+  <form method="post">
+    {% csrf_token %}
+
+    <p>
+      <label>Name</label><br>
+      <input type="text" name="name" required>
+    </p>
+
+    <p>
+      <label>Rating</label><br>
+      <input type="number" name="rating" min="1" max="5" value="5">
+    </p>
+
+    <p>
+      <label>Message</label><br>
+      <textarea name="message" rows="4" required></textarea>
+    </p>
+
     <button class="btn" type="submit">Submit Review</button>
   </form>
-  <h3>Approved Reviews</h3>
-  {% for r in reviews %}
-    <div class="card"><strong>{{ r.name }}</strong> — {{ r.rating }}/5<br>{{ r.message }}</div>
-  {% empty %}
-    <p>No reviews yet.</p>
-  {% endfor %}
+</div>
+
+<hr>
+
+<h3>Approved Reviews</h3>
+
+{% for r in reviews %}
+  <div class="card review-card">
+    <strong>{{ r.name }}</strong>
+    <span class="rating">⭐ {{ r.rating }}/5</span>
+    <p>{{ r.message }}</p>
+  </div>
+{% empty %}
+  <p>No reviews yet.</p>
+{% endfor %}
+
 {% endblock %}
