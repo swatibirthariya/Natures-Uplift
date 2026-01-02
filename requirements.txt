@@ -15,4 +15,4 @@ PyJWT
 psycopg2-binary
 qrcode
 pillow
-
+whitenoise
