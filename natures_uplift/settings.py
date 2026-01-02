@@ -34,6 +34,7 @@ SECURE_SSL_REDIRECT = False
 # INSTALLED APPS
 # -------------------------------
 INSTALLED_APPS = [
+    "accounts",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -45,7 +46,6 @@ INSTALLED_APPS = [
     "cloudinary_storage",
 
     "plants",
-    "accounts",
     "payments",
     "django.contrib.sites",          # Required
     "allauth",
