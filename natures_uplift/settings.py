@@ -45,6 +45,14 @@ INSTALLED_APPS = [
     "cloudinary_storage",
 
     "plants",
+    "accounts",
+    "payments",
+    "django.contrib.sites",          # Required
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.facebook",
 ]
 
 
@@ -60,6 +68,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 
@@ -76,6 +85,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "accounts.context_processors.auth_links",
+                "accounts.context_processors.cart_count",
+                "plants.context_processors.cart_count",
             ]
         },
     }
@@ -128,7 +140,16 @@ MEDIA_URL = "/media/"
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 #MEDIA_ROOT = BASE_DIR / "media"
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # -------------------------------
 # OTHER CONFIG
 # -------------------------------
@@ -138,3 +159,46 @@ USE_I18N = True
 USE_TZ = True
 
 AUTH_PASSWORD_VALIDATORS = []
+
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+
+# Sites framework
+SITE_ID = 1
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '7034000444-v098kotj3180egdo1aomtt8r4gobfao9.apps.googleusercontent.com',
+            'secret': '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',
+        }
+    }
+}
+
+
+# Optional settings for allauth
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'phone'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+LOGIN_REDIRECT_URL = '/'       # redirect after login
+LOGOUT_REDIRECT_URL = '/'      # redirect after logout
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'naturesuplift.otp@gmail.com'
+EMAIL_HOST_PASSWORD = 'nbduperlbgosefqv' 
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
