@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <h2 class="auth-title">Create Account</h2>
+
+    <!-- ===== Messages ===== -->
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <!-- ===== Form Errors ===== -->
+    {% if form.errors %}
+      <ul class="errorlist">
+        {% for field in form %}
+          {% for error in field.errors %}
+            <li>{{ field.label }}: {{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <div class="social-login">
+      <a href="{% url 'social_login' 'facebook' %}" class="social-btn fb">
+        <i class="fa-brands fa-facebook-f"></i> Facebook
+      </a>
+      <a href="{% url 'social_login' 'google' %}" class="social-btn google">
+        <i class="fa-brands fa-google"></i> Google
+      </a>
+    </div>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+
+      <div class="form-group">
+        {{ form.first_name.label_tag }}
+        {{ form.first_name }}
+      </div>
+
+      <div class="form-group">
+        {{ form.last_name.label_tag }}
+        {{ form.last_name }}
+      </div>
+
+      <div class="form-group">
+        {{ form.phone.label_tag }}
+        {{ form.phone }}
+      </div>
+
+      <div class="form-group">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+      </div>
+
+      <div class="form-group">
+        {{ form.password1.label_tag }}
+        {{ form.password1 }}
+      </div>
+
+      <div class="form-group">
+        {{ form.password2.label_tag }}
+        {{ form.password2 }}
+      </div>
+
+      <button type="submit" class="auth-submit">CREATE ACCOUNT</button>
+    </form>
+
+    <p class="auth-subtitle">
+      Already have an account? 
+      <a href="{% url 'login' %}">Sign in</a>
+    </p>
+
+  </div>
+</div>
+
+<!-- ===== Inline Styles for Messages & Errors ===== -->
+<style>
+  .messages { list-style: none; padding: 0; margin-bottom: 15px; }
+  .messages li.success { background-color: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin-bottom: 5px; }
+  .messages li.error { background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 5px; }
+
+  .errorlist { list-style: none; padding: 0; margin-bottom: 15px; color: #721c24; background: #f8d7da; padding: 10px; border-radius: 4px; }
+  .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+  .form-group label { margin-bottom: 5px; font-weight: 500; }
+  .auth-submit { width: 100%; padding: 10px; font-size: 16px; border-radius: 4px; border: none; background-color: #007bff; color: #fff; cursor: pointer; }
+  .auth-submit:hover { background-color: #0056b3; }
+</style>
+
+{% endblock %}

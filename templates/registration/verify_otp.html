@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Verify OTP{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <h2 class="auth-title">Verify OTP</h2>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {{ form.otp }}
+      <button type="submit" class="auth-submit">Verify OTP</button>
+    </form>
+
+    {% if whatsapp_link %}
+      <div style="margin-top: 15px; text-align: center;">
+        <a href="{{ whatsapp_link }}" target="_blank">
+          Receive OTP on WhatsApp
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
+
