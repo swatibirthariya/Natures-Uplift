@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="payment-box">
+
+  <h2>Complete Your Payment</h2>
+
+  <p><strong>Order ID:</strong> {{ order.id }}</p>
+  <p><strong>Amount:</strong> ₹{{ order.total_amount }}</p>
+
+  <hr>
+
+  <!-- 🔹 UPI SECTION -->
+  <h3>Pay using UPI Apps</h3>
+
+  <div class="upi-apps">
+    <a href="{{ gpay_link }}" class="upi-app-btn">
+      <img src="{% static 'images/gpay.webp' %}" alt="Google Pay">
+    </a>
+
+    <a href="{{ phonepe_link }}" class="upi-app-btn">
+      <img src="{% static 'images/phonepe.webp' %}" alt="PhonePe">
+    </a>
+  </div>
+
+  <p class="upi-note">
+    🔐 Secure UPI payment  
+    <br>
+    App buttons work on Android. QR works on all devices.
+  </p>
+
+  <hr>
+
+  <!-- 🔹 QR -->
+  <h3>Scan & Pay</h3>
+  <div class="qr-box">
+    <img src="{% static 'images/scanner.png' %}" alt="UPI QR Code">
+    <small>Scan using Google Pay / PhonePe / Paytm</small>
+  </div>
+
+  <hr>
+
+  <!-- 🔹 UTR -->
+  <h3>Enter Payment Reference</h3>
+
+  <form method="post" action="{% url 'submit_utr' order.id %}">
+    {% csrf_token %}
+    <input
+      type="text"
+      name="utr"
+      placeholder="Enter UTR / Transaction ID"
+      required
+    >
+    <button type="submit">Submit Payment</button>
+  </form>
+
+  <hr>
+
+  <!-- 🔹 COD OPTION -->
+  <h3>Or choose Cash on Delivery</h3>
+
+  <form method="post" action="{% url 'cod_order' order.id %}">
+    {% csrf_token %}
+    <button class="cod-btn">
+      💵 Cash on Delivery
+    </button>
+  </form>
+
+</div>
+
+{% endblock %}

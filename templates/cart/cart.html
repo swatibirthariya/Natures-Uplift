@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Your Cart{% endblock %}
+
+{% block content %}
+<div class="cart-container">
+
+  <h2 class="cart-title">Your Cart</h2>
+
+  {% if items %}
+    <div class="cart-list">
+      {% for item in items %}
+        <div class="cart-item">
+          
+          <div class="item-info">
+            <h4>{{ item.product.name }}</h4>
+            <p class="item-price">
+              ₹{{ item.product.price|floatformat:2 }} each
+            </p>
+          </div>
+
+          <div class="item-actions">
+            <div class="qty-box">
+              <a href="{% url 'decrease_qty' item.id %}" class="qty-btn">−</a>
+              <input type="text" value="{{ item.quantity }}" readonly>
+              <a href="{% url 'increase_qty' item.id %}" class="qty-btn">+</a>
+            </div>
+
+            <div class="item-total">
+              ₹{{ item.get_total_price|floatformat:2 }}
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="cart-summary">
+      <div class="total-row">
+        <span>Total</span>
+        <strong>₹{{ total|floatformat:2 }}</strong>
+      </div>
+
+      <a href="{% url 'checkout' %}" class="checkout-btn">
+        Proceed to Checkout
+      </a>
+    </div>
+
+  {% else %}
+    <p class="empty-cart">
+      Your cart is empty.
+      <a href="{% url 'plant_list' %}">Shop now</a>
+    </p>
+  {% endif %}
+
+</div>
+{% endblock %}

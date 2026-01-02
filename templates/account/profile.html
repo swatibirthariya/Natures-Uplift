@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width:900px">
+
+    <h2 class="auth-title">My Account</h2>
+
+    <!-- USER DETAILS -->
+    <div class="about-box">
+      <h4>👤 Profile</h4>
+      <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Phone:</strong> {{ user.username }}</p>
+    </div>
+
+    <!-- ADDRESS -->
+    <div class="about-box">
+      <h4>📍 Address</h4>
+      {% if address %}
+        <p>{{ address.address_line }}</p>
+        <p>{{ address.city }} - {{ address.pincode }}</p>
+      {% else %}
+        <p>No address saved</p>
+      {% endif %}
+    </div>
+
+    <!-- CART -->
+    <div class="about-box">
+      <h4>🛒 Cart Summary</h4>
+      {% if cart_items %}
+        {% for item in cart_items %}
+          <p>{{ item.plant.name }} × {{ item.quantity }}</p>
+        {% endfor %}
+        <a class="btn" href="{% url 'view_cart' %}">Go to Cart</a>
+      {% else %}
+        <p>Your cart is empty</p>
+      {% endif %}
+    </div>
+
+    <!-- ORDERS -->
+    <div class="about-box">
+      <h4>📦 Previous Orders</h4>
+      {% if orders %}
+        {% for order in orders %}
+          <p>
+            <strong>#{{ order.order_id }}</strong> —
+            ₹{{ order.total_amount }} —
+            {{ order.created_at|date:"d M Y" }}
+          </p>
+        {% endfor %}
+      {% else %}
+        <p>No previous orders</p>
+      {% endif %}
+    </div>
+
+    <!-- ACTIONS -->
+    <div style="margin-top:25px">
+      <a class="btn" href="{% url 'account_logout' %}">Sign Out</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

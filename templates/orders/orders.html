@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<h2>My Orders</h2>
+
+{% for order in orders %}
+  <div class="order-card">
+    <p>Order #{{ order.id }}</p>
+    <p>Total ₹{{ order.total_amount }}</p>
+    <a href="{% url 'order_detail' order.id %}">View details</a>
+  </div>
+{% empty %}
+  <p>No orders yet.</p>
+{% endfor %}
+{% endblock %}
