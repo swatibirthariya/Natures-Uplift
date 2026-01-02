@@ -140,7 +140,6 @@ MEDIA_URL = "/media/"
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 #MEDIA_ROOT = BASE_DIR / "media"
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
 
 
 AUTHENTICATION_BACKENDS = (
