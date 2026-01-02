@@ -1,11 +1,45 @@
 {% extends "base.html" %}
 {% block title %}Checkout{% endblock %}
 {% block content %}
-  <h2>Checkout</h2>
-  {% if delivery_error %}<p class="error">{{ delivery_error }}</p>{% endif %}
-  <form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <p><strong>UPI ID (for manual payment):</strong> 6366382516@ybl</p>
-    <button type="submit" class="btn">Proceed to Payment</button>
-  </form>
+
+<h2>Checkout</h2>
+
+{% if delivery_error %}
+  <p class="error">{{ delivery_error }}</p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <div class="delivery-info">
+    <p><strong>Normal Delivery:</strong> 1–2 working days (Free)</p>
+    <p><strong>Fast Delivery:</strong> 2–3 hours (+₹50)</p>
+  </div>
+
+  <p>Subtotal: ₹{{ total|floatformat:2 }}</p>
+  <p>Delivery Charge: ₹{{ delivery_charge }}</p>
+  <hr>
+  <p><strong>Grand Total: ₹{{ total }}</strong></p>
+
+  <p><strong>UPI ID:</strong> 6366382516@ybl</p>
+
+  <div class="upi-options">
+    <a href="upi://pay?pa=6366382516@ybl&pn=NaturesUplift" class="btn">Google Pay</a>
+    <a href="upi://pay?pa=6366382516@ybl&pn=NaturesUplift" class="btn">PhonePe</a>
+  </div>
+
+  <label><strong>Enter UTR Number</strong></label>
+  <input type="text" name="utr" required placeholder="UPI Transaction ID">
+
+  <p class="payment-note">
+    Payment will be verified by admin.
+    <br>
+    <strong>Status:</strong> Under Review
+  </p>
+
+  <button type="submit" class="btn">Submit Payment</button>
+</form>
+
 {% endblock %}
+
