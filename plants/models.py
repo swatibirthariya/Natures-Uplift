@@ -19,7 +19,7 @@ class Plant(models.Model):
     description = models.TextField(blank=True)
     category = models.CharField(
         max_length=30,
-        choices=CATEGORY_CHOICES
+        choices=CATEGORY_CHOICES,
         blank=True,
         null=True
     )
