@@ -9,33 +9,81 @@ import uuid, decimal
 def seed_plants():
     if Plant.objects.count() == 0:
         samples = [
-            {'name':'Areca Palm','size':'Medium (60-90 cm)','description':'Low-maintenance indoor palm, purifies air.','price':499},
-            {'name':'Snake Plant','size':'Small (20-45 cm)','description':'Tough, thrives in low light; great for beginners.','price':299},
-            {'name':'Fiddle Leaf Fig','size':'Large (90-150 cm)','description':'Statement plant with large glossy leaves.','price':1299},
-            {'name':'Money Plant','size':'Small (30-60 cm)','description':'Fast-growing climber, easy to propagate.','price':199},
-            {'name':'ZZ Plant','size':'Medium (50-80 cm)','description':'Very low water needs, great for offices.','price':599},
-            {'name':'Rubber Plant','size':'Medium-Large (70-120 cm)','description':'Bold foliage, tolerates indoor conditions.','price':799},
+            {
+                'name':'Areca Palm',
+                'category':'indoor',
+                'size':'Medium (60-90 cm)',
+                'description':'Low-maintenance indoor palm, purifies air.',
+                'price':499
+            },
+            {
+                'name':'Snake Plant',
+                'category':'low_maintenance',
+                'size':'Small (20-45 cm)',
+                'description':'Tough, thrives in low light; great for beginners.',
+                'price':299
+            },
+            {
+                'name':'Fiddle Leaf Fig',
+                'category':'indoor',
+                'size':'Large (90-150 cm)',
+                'description':'Statement plant with large glossy leaves.',
+                'price':1299
+            },
+            {
+                'name':'Money Plant',
+                'category':'air_purifying',
+                'size':'Small (30-60 cm)',
+                'description':'Fast-growing climber, easy to propagate.',
+                'price':199
+            },
+            {
+                'name':'ZZ Plant',
+                'category':'low_maintenance',
+                'size':'Medium (50-80 cm)',
+                'description':'Very low water needs, great for offices.',
+                'price':599
+            },
+            {
+                'name':'Rubber Plant',
+                'category':'indoor',
+                'size':'Medium-Large (70-120 cm)',
+                'description':'Bold foliage, tolerates indoor conditions.',
+                'price':799
+            },
         ]
+
         for s in samples:
             Plant.objects.create(**s)
 
+
 def home(request):
-    seed_plants()
+    if settings.DEBUG:
+        seed_plants()
     return render(request,'plants/home.html')
 
-def plant_list(request):
-    category = request.GET.get('category')  # get category from query params
-    if category:
-        plants = Plant.objects.filter(available=True, category=category)
-    else:
-        plants = Plant.objects.none() 
-    return render(request, 'plants/plant_list.html', {'plants': plants, 'selected_category': category})
 
+def plant_list(request):
+    category = request.GET.get('category')
+
+    plants = Plant.objects.all()
+
+    if category:
+        plants = plants.filter(category=category)
+
+    return render(
+        request,
+        'plants/plant_list.html',
+        {
+            'plants': plants,
+            'selected_category': category
+        }
+    )
 def plant_detail(request, pk):
     plant = get_object_or_404(Plant, pk=pk)
     return render(request,'plants/plant_detail.html',{'plant':plant})
 
-def get_cart(request):
+'''def get_cart(request):
     return request.session.get('cart', {})
 
 def save_cart(request, cart):
@@ -57,14 +105,14 @@ def view_cart(request):
         p = get_object_or_404(Plant, pk=int(pid))
         items.append({'plant':p,'qty':qty,'subtotal': p.price * qty})
         total += p.price * qty
-    return render(request,'plants/cart.html',{'items':items,'total':total})
+    return render(request,'plants/cart.html',{'items':items,'total':total})'''
 
 def is_bangalore_pincode(pin):
     if not pin: return False
     s = str(pin).strip()
     return len(s)==6 and s.startswith('56')
 
-def checkout(request):
+'''def checkout(request):
     cart = get_cart(request)
     if not cart:
         return redirect('plant_list')
@@ -80,8 +128,12 @@ def checkout(request):
             cd = form.cleaned_data
             if not is_bangalore_pincode(cd['pincode']):
                 return render(request,'plants/checkout.html',{'items':items,'total':total,'form':form,'delivery_error':'We are not delivering to this pincode.'})
-            if cd['delivery_type']=='fast':
-                total += decimal.Decimal('50.00')
+            delivery_charge = decimal.Decimal('0.00')
+
+            if cd['delivery_type'] == 'fast':
+                delivery_charge = decimal.Decimal('50.00')
+
+            total += delivery_charge
             order = Order.objects.create(order_id=str(uuid.uuid4()).replace('-','')[:12],
                                          name=cd['name'], email=cd['email'], phone=cd['phone'],
                                          pincode=cd['pincode'], delivery_type=cd['delivery_type'],
@@ -92,7 +144,7 @@ def checkout(request):
             return redirect('payment_sim')
     else:
         form = CheckoutForm()
-    return render(request,'plants/checkout.html',{'items':items,'total':total,'form':form})
+    return render(request,'plants/checkout.html',{'items': items,'total': total,'form': form,'delivery_charge': delivery_charge})
 
 def payment_sim(request):
     return render(request,'plants/payment_sim.html',{'upi':'6366382516@ybl'})
@@ -114,20 +166,30 @@ def payment_callback(request):
         del request.session['pending_order']
         return redirect('order_success', order_id=order.order_id)
     else:
-        return render(request,'plants/payment_failed.html',{})
+        return render(request,'plants/payment_failed.html',{})'''
 
 def order_success(request, order_id):
     return render(request,'plants/order_success.html',{'order_id':order_id})
 
+from django.contrib import messages
+
 def reviews(request):
-    if request.method=='POST':
-        name = request.POST.get('name')
-        rating = int(request.POST.get('rating',5))
-        message = request.POST.get('message')
-        Review.objects.create(name=name, rating=rating, message=message, approved=False)
+    if request.method == 'POST':
+        Review.objects.create(
+            name=request.POST.get('name'),
+            rating=int(request.POST.get('rating', 5)),
+            message=request.POST.get('message'),
+            approved=False
+        )
+        messages.success(
+            request,
+            "Thank you! Your review was submitted and will appear after approval."
+        )
         return redirect('reviews')
+
     revs = Review.objects.filter(approved=True).order_by('-created_at')
     return render(request,'plants/reviews.html',{'reviews':revs})
+
 
 def contact(request):
     return render(request,'plants/contact.html')
