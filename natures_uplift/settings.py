@@ -24,6 +24,7 @@ ALLOWED_HOSTS = [
     "natures-uplift-5inz.onrender.com",
     "natures-uplift-z9bl.onrender.com",
     "shop.naturesuplift.com",
+    "natures-uplift-10.onrender.com",
     "127.0.0.1",
     "localhost",
 ]
