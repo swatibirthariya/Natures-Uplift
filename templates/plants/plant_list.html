@@ -3,6 +3,7 @@
 {% block content %}
 
 <h2>Plants</h2>
+
 <div class="category-bar">
   <a href="{% url 'plant_list' %}"
      class="{% if not selected_category %}active{% endif %}">
@@ -39,7 +40,7 @@
      Flowering Plants
   </a>
 </div>
-   
+
 {% if selected_category %}
   <p>Showing category: <strong>{{ selected_category|title }}</strong></p>
 {% endif %}
@@ -59,7 +60,8 @@
     <p>{{ p.description }}</p>
     <p><strong>Size:</strong> {{ p.size }}</p>
     <p><strong>Price:</strong> ₹{{ p.price }}</p>
-   <form method="post" action="{% url 'add_to_cart' p.pk %}">
+
+    <form method="post" action="{% url 'add_to_cart' p.pk %}">
       {% csrf_token %}
       <button type="submit" class="btn">Add to cart</button>
     </form>
@@ -78,9 +80,71 @@ function openImageModal(src) {
   document.getElementById("modalImage").src = src;
   document.getElementById("imageModal").style.display = "flex";
 }
+
 function closeImageModal() {
   document.getElementById("imageModal").style.display = "none";
 }
+
+/* Mobile tap fix for category bar */
+document.querySelectorAll('.category-bar a').forEach(link => {
+  link.addEventListener('touchstart', function () {
+    this.click();
+  });
+});
 </script>
+
+<style>
+/* FIX: Category bar mobile click + overflow */
+.category-bar {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 10px;
+
+  position: relative;
+  z-index: 10;
+
+  -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
+}
+
+.category-bar a {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #f2f2f2;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.category-bar a.active {
+  background: #2e7d32;
+  color: #fff;
+}
+
+/* Prevent cards from overlapping category bar */
+.grid {
+  position: relative;
+  z-index: 1;
+}
+
+/* Image modal safety */
+.image-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.image-modal img {
+  max-width: 90%;
+  max-height: 90%;
+}
+</style>
 
 {% endblock %}
