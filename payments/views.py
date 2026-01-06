@@ -9,7 +9,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
-
+from django.db import transaction
 
 
 UPI_ID = "6366382516@ybl"
@@ -123,7 +123,9 @@ def submit_utr(request, order_id):
 
         # ✅ CLEAR CART
         CartItem.objects.filter(cart__user=request.user).delete()
-        send_order_emails(order)
+        transaction.on_commit(
+            lambda: send_order_emails(order)
+        )
         messages.success(
             request,
             "Payment reference received. Your payment is under verification."
@@ -151,7 +153,9 @@ def cod_order(request, order_id):
 
     # ✅ CLEAR CART
     CartItem.objects.filter(cart__user=request.user).delete()
-    send_order_emails(order)
+    transaction.on_commit(
+            lambda: send_order_emails(order)
+        )
     messages.success(
         request,
         "Your order has been placed successfully with Cash on Delivery."
