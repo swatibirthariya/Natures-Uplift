@@ -196,7 +196,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'naturesuplift.otp@gmail.com'
 EMAIL_HOST_PASSWORD = 'nbduperlbgosefqv' 
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = "Natures Uplift <naturesuplift71@gmail.com>"
+ADMIN_EMAIL = ["naturesuplift71@gmail.com"]
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
