@@ -66,10 +66,10 @@ Natures Uplift
         text_content = strip_tags(html_content)
 
         email = EmailMultiAlternatives(
-            subject="New Order Received – Natures Uplift 🌱",
-            body=text_content,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[settings.ADMIN_EMAIL],
+        subject="New Order Received – Natures Uplift 🌱",
+        body=text_content,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=settings.ADMIN_EMAIL,   # ✅ already a list
         )
 
         email.attach_alternative(html_content, "text/html")
