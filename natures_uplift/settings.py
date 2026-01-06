@@ -3,7 +3,7 @@ import dj_database_url
 from pathlib import Path
 import cloudinary_storage
 BASE_DIR = Path(__file__).resolve().parent.parent
-import os
+
 
 # -------------------------------
 # SECURITY SETTINGS
