@@ -2079,3 +2079,54 @@ h1, h2, h3, h4 {
   margin-top: auto;
   border-radius: 24px;
 }
+
+/* =========================
+   MOBILE NAV FIX ONLY
+========================= */
+@media (max-width: 768px) {
+
+  /* Hide desktop menu */
+  .desktop-nav {
+    display: none !important;
+  }
+
+  /* Show hamburger */
+  .menu-toggle {
+    display: block;
+    font-size: 26px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Mobile menu container */
+  .mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    z-index: 999;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+
+  /* When toggled */
+  .mobile-menu.active {
+    display: block;
+  }
+
+  /* Mobile menu links */
+  .mobile-menu a {
+    display: block;
+    padding: 14px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .mobile-menu a:last-child {
+    border-bottom: none;
+  }
+}
+
