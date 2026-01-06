@@ -4,73 +4,126 @@
 
 <h2>Plants</h2>
 
-<div class="category-bar">
-  <a href="{% url 'plant_list' %}"
-     class="{% if not selected_category %}active{% endif %}">
-     All
-  </a>
+<!-- MOBILE FILTER BUTTON -->
+<button class="mobile-filter-btn" onclick="toggleSidebar()">☰ Categories</button>
 
-  <a href="{% url 'plant_list' %}?category=indoor"
-     class="{% if selected_category == 'indoor' %}active{% endif %}">
-     Indoor
-  </a>
+<div class="plant-layout">
 
-  <a href="{% url 'plant_list' %}?category=outdoor"
-     class="{% if selected_category == 'outdoor' %}active{% endif %}">
-     Outdoor
-  </a>
+  <!-- ======================
+       MOBILE SIDEBAR ONLY
+  ======================= -->
+  <aside id="sidebar" class="sidebar">
+    <h3>Plants</h3>
 
-  <a href="{% url 'plant_list' %}?category=low_maintenance"
-     class="{% if selected_category == 'low_maintenance' %}active{% endif %}">
-     Low Maintenance
-  </a>
+    <button class="dropdown-toggle" onclick="toggleCategoryDropdown()">
+      Categories ▾
+    </button>
 
-  <a href="{% url 'plant_list' %}?category=air_purifying"
-     class="{% if selected_category == 'air_purifying' %}active{% endif %}">
-     Air Purifying
-  </a>
+    <div id="categoryDropdown" class="category-dropdown">
+      <a href="{% url 'plant_list' %}"
+         class="{% if not selected_category %}active{% endif %}">
+        All
+      </a>
 
-  <a href="{% url 'plant_list' %}?category=fruit"
-     class="{% if selected_category == 'fruit' %}active{% endif %}">
-     Fruits Plants
-  </a>
+      <a href="{% url 'plant_list' %}?category=indoor"
+         class="{% if selected_category == 'indoor' %}active{% endif %}">
+        Indoor
+      </a>
 
-  <a href="{% url 'plant_list' %}?category=flowering"
-     class="{% if selected_category == 'flowering' %}active{% endif %}">
-     Flowering Plants
-  </a>
+      <a href="{% url 'plant_list' %}?category=outdoor"
+         class="{% if selected_category == 'outdoor' %}active{% endif %}">
+        Outdoor
+      </a>
+
+      <a href="{% url 'plant_list' %}?category=low_maintenance"
+         class="{% if selected_category == 'low_maintenance' %}active{% endif %}">
+        Low Maintenance
+      </a>
+
+      <a href="{% url 'plant_list' %}?category=air_purifying"
+         class="{% if selected_category == 'air_purifying' %}active{% endif %}">
+        Air Purifying
+      </a>
+
+      <a href="{% url 'plant_list' %}?category=fruit"
+         class="{% if selected_category == 'fruit' %}active{% endif %}">
+        Fruit Plants
+      </a>
+
+      <a href="{% url 'plant_list' %}?category=flowering"
+         class="{% if selected_category == 'flowering' %}active{% endif %}">
+        Flowering Plants
+      </a>
+    </div>
+  </aside>
+
+  <!-- ======================
+       MAIN CONTENT
+  ======================= -->
+  <section class="plant-content">
+
+    <!-- DESKTOP CATEGORY CHIPS -->
+    <div class="category-bar desktop-only">
+      <a href="{% url 'plant_list' %}"
+         class="{% if not selected_category %}active{% endif %}">All</a>
+
+      <a href="{% url 'plant_list' %}?category=indoor"
+         class="{% if selected_category == 'indoor' %}active{% endif %}">Indoor</a>
+
+      <a href="{% url 'plant_list' %}?category=outdoor"
+         class="{% if selected_category == 'outdoor' %}active{% endif %}">Outdoor</a>
+
+      <a href="{% url 'plant_list' %}?category=low_maintenance"
+         class="{% if selected_category == 'low_maintenance' %}active{% endif %}">
+        Low Maintenance
+      </a>
+
+      <a href="{% url 'plant_list' %}?category=air_purifying"
+         class="{% if selected_category == 'air_purifying' %}active{% endif %}">
+        Air Purifying
+      </a>
+
+      <a href="{% url 'plant_list' %}?category=fruit"
+         class="{% if selected_category == 'fruit' %}active{% endif %}">
+        Fruits
+      </a>
+
+      <a href="{% url 'plant_list' %}?category=flowering"
+         class="{% if selected_category == 'flowering' %}active{% endif %}">
+        Flowering
+      </a>
+    </div>
+
+    <div class="grid">
+      {% for p in plants %}
+      <div class="card">
+        <a href="javascript:void(0);" onclick="openImageModal('{{ p.image.url }}')">
+          {% if p.image %}
+            <img src="{{ p.image.url }}" alt="{{ p.name }}">
+          {% else %}
+            <img src="/static/images/ai_placeholder.jpg" alt="{{ p.name }}">
+          {% endif %}
+        </a>
+
+        <h3>{{ p.name }}</h3>
+        <p class="plant-desc">{{ p.description }}</p>
+        <p><strong>Size:</strong> {{ p.size }}</p>
+        <p><strong>Price:</strong> ₹{{ p.price }}</p>
+
+        <form method="post" action="{% url 'add_to_cart' p.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn">Add to cart</button>
+        </form>
+      </div>
+      {% empty %}
+        <p>No plants found.</p>
+      {% endfor %}
+    </div>
+
+  </section>
 </div>
 
-{% if selected_category %}
-  <p>Showing category: <strong>{{ selected_category|title }}</strong></p>
-{% endif %}
-
-<div class="grid">
-{% for p in plants %}
-  <div class="card">
-    <a href="javascript:void(0);" onclick="openImageModal('{{ p.image.url }}')">
-      {% if p.image %}
-        <img src="{{ p.image.url }}" alt="{{ p.name }}">
-      {% else %}
-        <img src="/static/images/ai_placeholder.jpg" alt="{{ p.name }}">
-      {% endif %}
-    </a>
-
-    <h3>{{ p.name }}</h3>
-    <p>{{ p.description }}</p>
-    <p><strong>Size:</strong> {{ p.size }}</p>
-    <p><strong>Price:</strong> ₹{{ p.price }}</p>
-
-    <form method="post" action="{% url 'add_to_cart' p.pk %}">
-      {% csrf_token %}
-      <button type="submit" class="btn">Add to cart</button>
-    </form>
-  </div>
-{% empty %}
-  <p>No plants found for this category.</p>
-{% endfor %}
-</div>
-
+<!-- IMAGE MODAL -->
 <div id="imageModal" class="image-modal" onclick="closeImageModal()">
   <img id="modalImage">
 </div>
@@ -85,38 +138,40 @@ function closeImageModal() {
   document.getElementById("imageModal").style.display = "none";
 }
 
-/* Mobile tap fix for category bar */
-document.querySelectorAll('.category-bar a').forEach(link => {
-  link.addEventListener('touchstart', function () {
-    this.click();
-  });
-});
+function toggleSidebar() {
+  document.getElementById("sidebar").classList.toggle("open");
+}
+
+function toggleCategoryDropdown() {
+  document.getElementById("categoryDropdown").classList.toggle("open");
+}
 </script>
 
 <style>
-/* FIX: Category bar mobile click + overflow */
-.category-bar {
+/* ======================
+   DESKTOP DEFAULT
+====================== */
+.plant-layout {
+  display: block;
+}
+
+.sidebar {
+  display: none;
+}
+
+.desktop-only {
   display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  white-space: nowrap;
-  padding-bottom: 10px;
-
-  position: relative;
-  z-index: 10;
-
-  -webkit-overflow-scrolling: touch;
-  touch-action: manipulation;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .category-bar a {
-  flex-shrink: 0;
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: 20px;
   background: #f2f2f2;
   text-decoration: none;
-  color: #333;
   font-size: 14px;
+  color: #333;
 }
 
 .category-bar a.active {
@@ -124,13 +179,93 @@ document.querySelectorAll('.category-bar a').forEach(link => {
   color: #fff;
 }
 
-/* Prevent cards from overlapping category bar */
 .grid {
-  position: relative;
-  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
 }
 
-/* Image modal safety */
+/* ======================
+   MOBILE ONLY
+====================== */
+.mobile-filter-btn {
+  display: none;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  background: #2e7d32;
+  color: #fff;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-filter-btn {
+    display: inline-block;
+  }
+
+  .sidebar {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 240px;
+    height: 100%;
+    background: #f7f9f6;
+    padding: 16px;
+    z-index: 999;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .dropdown-toggle {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    background: #2e7d32;
+    color: #fff;
+    border: none;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  .category-dropdown {
+    display: none;
+  }
+
+  .category-dropdown.open {
+    display: block;
+  }
+
+  .category-dropdown a {
+    display: block;
+    padding: 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #333;
+  }
+
+  .category-dropdown a.active {
+    background: #2e7d32;
+    color: #fff;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* ======================
+   IMAGE MODAL
+====================== */
 .image-modal {
   position: fixed;
   inset: 0;
@@ -144,6 +279,13 @@ document.querySelectorAll('.category-bar a').forEach(link => {
 .image-modal img {
   max-width: 90%;
   max-height: 90%;
+}
+
+/* TEXT ALIGN */
+.plant-desc {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #555;
 }
 </style>
 
