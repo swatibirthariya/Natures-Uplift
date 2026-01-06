@@ -35,5 +35,57 @@
   </div>
 
 </div>
-{% endblock %}
 
+<style>
+/* ===== Mobile Overflow Fix ===== */
+
+.about-container {
+  max-width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.about-text {
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.about-box {
+  max-width: 100%;
+  overflow: hidden;
+  padding: 14px;
+  margin-top: 16px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #f7f9f6;
+}
+
+.about-box p,
+.about-box a {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.about-box a {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* Extra safety for very small devices */
+@media (max-width: 480px) {
+  h2 {
+    font-size: 20px;
+  }
+
+  .about-box h4 {
+    font-size: 16px;
+  }
+
+  .about-box p {
+    font-size: 14px;
+  }
+}
+</style>
+
+{% endblock %}
