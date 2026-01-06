@@ -1,3 +1,4 @@
+import re
 from django import forms
 
 class CheckoutForm(forms.Form):
@@ -15,7 +16,7 @@ class CheckoutForm(forms.Form):
             'inputmode': 'numeric',
         })
     )
-
+    pincode = forms.CharField(max_length=10)
     def clean_phone(self):
         phone = self.cleaned_data.get("phone")
 
@@ -25,4 +26,3 @@ class CheckoutForm(forms.Form):
             )
 
         return phone
-       

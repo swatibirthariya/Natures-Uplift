@@ -3,6 +3,7 @@ from cloudinary.models import CloudinaryField
 
 
 
+
 class Plant(models.Model):
 
     CATEGORY_CHOICES = [
@@ -19,9 +20,7 @@ class Plant(models.Model):
     description = models.TextField(blank=True)
     category = models.CharField(
         max_length=30,
-        choices=CATEGORY_CHOICES,
-        blank=True,
-        null=True
+        choices=CATEGORY_CHOICES
     )
     size = models.CharField(max_length=50, blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
@@ -44,11 +43,11 @@ class Order(models.Model):
     def __str__(self):
         return self.order_id
 
-class OrderItem(models.Model):
+'''class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     plant = models.ForeignKey(Plant, on_delete=models.PROTECT)
     qty = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)'''
 
 class Review(models.Model):
     name = models.CharField(max_length=120)

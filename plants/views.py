@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from .models import Plant, Order, OrderItem, Review
 from .forms import CheckoutForm
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import uuid, decimal
+from .models import Plant, Review
 
 def seed_plants():
     if Plant.objects.count() == 0:
@@ -82,30 +82,6 @@ def plant_list(request):
 def plant_detail(request, pk):
     plant = get_object_or_404(Plant, pk=pk)
     return render(request,'plants/plant_detail.html',{'plant':plant})
-
-'''def get_cart(request):
-    return request.session.get('cart', {})
-
-def save_cart(request, cart):
-    request.session['cart'] = cart
-    request.session.modified = True
-
-def add_to_cart(request, pk):
-    plant = get_object_or_404(Plant, pk=pk)
-    cart = get_cart(request)
-    cart[str(pk)] = cart.get(str(pk), 0) + 1
-    save_cart(request, cart)
-    return redirect('view_cart')
-
-def view_cart(request):
-    cart = get_cart(request)
-    items = []
-    total = 0
-    for pid, qty in cart.items():
-        p = get_object_or_404(Plant, pk=int(pid))
-        items.append({'plant':p,'qty':qty,'subtotal': p.price * qty})
-        total += p.price * qty
-    return render(request,'plants/cart.html',{'items':items,'total':total})'''
 
 def is_bangalore_pincode(pin):
     if not pin: return False
