@@ -7,11 +7,17 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # plants app
     path('', include('plants.urls')),
-    path('accounts/', include('accounts.urls')),
+
+    # authentication ONLY
     path('accounts/', include('allauth.urls')),
+
+    # cart ONLY
+    path('cart/', include('accounts.urls')),
+
     path('payments/', include('payments.urls')),
-    path("cart/", include("accounts.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
