@@ -21,15 +21,15 @@ UPI_ID = "6366382516@ybl"
 # ==============================
 # EMAIL (ASYNC + RENDER SAFE)
 # ==============================
-def _send_order_emails(order):
-    try:
-        user = order.user
-        items = order.items.all()
+def send_order_emails(order):
+    user = order.user
+    items = order.items.all()
 
-        # --------------------
-        # CUSTOMER EMAIL
-        # --------------------
-        if user.email:
+    # --------------------
+    # CUSTOMER EMAIL
+    # --------------------
+    if user.email:
+        try:
             send_mail(
                 subject="Your order with Natures Uplift 🌱",
                 message=f"""
@@ -49,34 +49,36 @@ Natures Uplift
 """,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[user.email],
-                fail_silently=True,  # 🔐 NEVER crash request
             )
+        except Exception as e:
+            print("❌ Customer email failed:", e)
 
-        # --------------------
-        # ADMIN EMAIL
-        # --------------------
+    # --------------------
+    # ADMIN EMAIL
+    # --------------------
+    try:
         html_content = render_to_string(
             "emails/admin_order_email.html",
             {
                 "order": order,
                 "items": items,
-            },
+            }
         )
 
         text_content = strip_tags(html_content)
 
         email = EmailMultiAlternatives(
-        subject="New Order Received – Natures Uplift 🌱",
-        body=text_content,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=settings.ADMIN_EMAIL,   # ✅ already a list
+            subject="New Order Received – Natures Uplift 🌱",
+            body=text_content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=settings.ADMIN_EMAIL,  # ✅ MUST be list
         )
 
         email.attach_alternative(html_content, "text/html")
-        email.send(fail_silently=True)
+        email.send()
 
     except Exception as e:
-        logger.exception("Order email failed: %s", e)
+        print("❌ Admin email failed:", e)
 
 
 def send_order_emails_async(order):
