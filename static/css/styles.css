@@ -2130,3 +2130,57 @@ h1, h2, h3, h4 {
   }
 }
 
+/* =========================
+   MOBILE NAV FIX ONLY
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Hide desktop nav on mobile */
+  .desktop-nav {
+    display: none;
+  }
+
+  /* Mobile menu container */
+  .mobile-menu {
+    position: absolute;          /* KEY FIX */
+    top: 100%;                   /* opens below header */
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    z-index: 9999;
+
+    display: none;               /* hidden by default */
+    flex-direction: column;
+    padding: 10px 0;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  /* When active (menu open) */
+  .mobile-menu.active {
+    display: flex;
+  }
+
+  /* Mobile links */
+  .mobile-menu a {
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #333;
+    border-bottom: 1px solid #eee;
+  }
+
+  .mobile-menu a:last-child {
+    border-bottom: none;
+  }
+
+  /* Menu toggle visible only on mobile */
+  .menu-toggle {
+    display: block;
+    font-size: 22px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+
