@@ -59,7 +59,10 @@
     <p>{{ p.description }}</p>
     <p><strong>Size:</strong> {{ p.size }}</p>
     <p><strong>Price:</strong> ₹{{ p.price }}</p>
-    <p><a class="btn" href="{% url 'add_to_cart' p.pk %}">Add to cart</a></p>
+   <form method="post" action="{% url 'add_to_cart' p.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn">Add to cart</button>
+    </form>
   </div>
 {% empty %}
   <p>No plants found for this category.</p>

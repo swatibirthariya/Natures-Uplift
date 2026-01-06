@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ plant.name }}{% endblock %}
+{% block content %}
+  <h2>{{ plant.name }}</h2>
+<div class="product-card">
+ {% if plant.image %}
+    <img
+      src="{{ plant.image.url }}"
+      alt="{{ plant.name }}"
+      class="product-image"
+      onclick="openImageModal('{{ plant.image.url }}')"
+    >
+ {% else %}
+ <img src="/static/images/ai_placeholder.jpg" alt="{{ plant.name }}" class="product-image">
+ {% endif %}
+  <div class="product-info">
+    <p class="product-description">{{ plant.description }}</p>
+    <p><strong>Size:</strong> {{ plant.size }}</p>
+    <p class="product-price">₹{{ plant.price }}</p>
+    <form method="post" action="{% url 'add_to_cart' p.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn">Add to cart</button>
+    </form>
+  </div>
+</div>
+<!-- ✅ MODAL HTML (HERE) -->
+<div id="imageModal" class="image-modal" onclick="closeImageModal()">
+  <img id="modalImage">
+</div>
+
+<!-- ✅ JS (HERE) -->
+<script>
+function openImageModal(src) {
+    document.getElementById("modalImage").src = src;
+    document.getElementById("imageModal").style.display = "flex";
+}
+
+function closeImageModal() {
+    document.getElementById("imageModal").style.display = "none";
+}
+</script>
+{% endblock %}
