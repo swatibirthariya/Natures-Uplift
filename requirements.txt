@@ -16,3 +16,4 @@ psycopg2-binary
 qrcode
 pillow
 whitenoise
+sib-api-v3-sdk
