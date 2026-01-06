@@ -206,7 +206,7 @@ EMAIL_HOST_PASSWORD = os.environ.get(
 
 DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
-    "Natures Uplift <naturesuplift71@gmail.com>"
+    "Natures Uplift <naturesuplift.otp@gmail.com>"
 )
 
 # MUST be a list (used by EmailMultiAlternatives)
