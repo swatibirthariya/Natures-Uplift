@@ -178,8 +178,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 # Optional settings for allauth
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = {"username", "email"}
+ACCOUNT_SIGNUP_FIELDS = ["username*", "email*", "password1*", "password2*"]
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'phone'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
