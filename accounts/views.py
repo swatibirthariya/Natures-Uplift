@@ -13,13 +13,22 @@ import time
 from plants.models import Plant
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
 from .models import Order, CartItem, Address
+from django.utils.safestring import mark_safe
 
 from .models import Cart, CartItem
 from .forms import CheckoutForm
 from accounts.models import Order
 from payments.models import Payment
-
+from .models import OrderItem
+# ===== FORGOT PASSWORD =====
+from django.contrib import messages
+from .forms import OTPForm
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils.safestring import mark_safe
+from plants.models import Plant
 
 
 @login_required
@@ -126,81 +135,76 @@ def register(request):
 
 
 
-# ===== FORGOT PASSWORD =====
+
+
 def forgot_password(request):
-    if request.method == 'POST':
-        phone = request.POST.get('phone')
-        try:
-            user = CustomUser.objects.get(phone=phone)
-            
-            # Generate OTP
-            otp = str(random.randint(100000, 999999))
-            request.session['otp'] = otp
-            request.session['phone'] = phone
-            request.session['otp_time'] = time.time()
+    if request.method == "POST":
+        identifier = request.POST.get("identifier")
 
-            print("Generated OTP:", otp)
+        user = (
+            CustomUser.objects.filter(email=identifier).first()
+            or CustomUser.objects.filter(phone=identifier).first()
+        )
 
-            # ✅ EMAIL OTP
-            if user.email:
-                try:
-                    send_otp_email(user.email, otp)
-                    print("OTP email sent to:", user.email)
-                    messages.success(request, f"OTP sent to your email: {user.email}")
-                except Exception as e:
-                    print("Email sending error:", e)
-                    messages.error(request, "Failed to send OTP email.")
+        if not user:
+            messages.error(request, "No account found")
+            return redirect("forgot_password")
 
-            # ✅ WHATSAPP OTP LINK
-            whatsapp_link = get_whatsapp_otp_link(phone, otp)
+        otp = str(random.randint(100000, 999999))
 
-            return render(request, 'registration/verify_otp.html', {
-                'form': OTPForm(),
-                'whatsapp_link': whatsapp_link
-            })
+        request.session["reset_user_id"] = user.id
+        request.session["reset_otp"] = otp
+        request.session["otp_time"] = time.time()
 
-        except CustomUser.DoesNotExist:
-            print("Phone not registered:", phone)
-            messages.error(request, "Phone number not registered")
+        send_mail(
+            "Reset Password OTP – Natures Uplift 🌱",
+            f"Your OTP is {otp}. Valid for 5 minutes.",
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+        )
 
-    return render(request, 'registration/forgot_password.html')
+        messages.success(request, "OTP sent to your registered email")
+        return redirect("verify_otp")
+
+    return render(request, "registration/forgot_password.html")
 
 
-# ===== VERIFY OTP =====
+
 def verify_otp(request):
-    if request.method == 'POST':
-        otp_time = request.session.get('otp_time', 0)
-
-        if time.time() - otp_time > 300:
+    if request.method == "POST":
+        if time.time() - request.session.get("otp_time", 0) > 300:
             messages.error(request, "OTP expired")
-            return redirect('forgot_password')
+            return redirect("forgot_password")
 
-        if request.POST.get('otp') == request.session.get('otp'):
-            messages.success(request, "OTP verified successfully!")
-            return redirect('reset_password')
+        if request.POST.get("otp") == request.session.get("reset_otp"):
+            return redirect("reset_password")
 
         messages.error(request, "Invalid OTP")
 
-    return render(request, 'registration/verify_otp.html', {'form': OTPForm()})
-
+    return render(request, "registration/verify_otp.html")
 
 # ===== RESET PASSWORD =====
 def reset_password(request):
-    if request.method == 'POST':
+    user_id = request.session.get("reset_user_id")
+
+    if not user_id:
+        return redirect("forgot_password")
+
+    user = CustomUser.objects.get(id=user_id)
+
+    if request.method == "POST":
         form = ResetPasswordForm(request.POST)
         if form.is_valid():
-            user = CustomUser.objects.get(phone=request.session.get('phone'))
-            user.set_password(form.cleaned_data['password'])
+            user.set_password(form.cleaned_data["password"])
             user.save()
+
+            request.session.flush()
             messages.success(request, "Password reset successful")
-            return redirect('login')
-        else:
-            print("Reset password form errors:", form.errors)
-            messages.error(request, "Please fix the errors below.")
+            return redirect("login")
     else:
         form = ResetPasswordForm()
-    return render(request, 'registration/reset_password.html', {'form': form})
 
+    return render(request, "registration/reset_password.html", {"form": form})
 
 # ===== CHECKOUT =====
 @login_required
@@ -220,10 +224,7 @@ def checkout(request):
     subtotal = sum(item.get_total_price() for item in cart_items)
     delivery_type = request.POST.get("delivery_type", "fast")
 
-    if delivery_type == "fast":
-        delivery_charge = 85
-    else:
-        delivery_charge = 60
+    delivery_charge = 85 if delivery_type == "fast" else 60
     grand_total = subtotal + delivery_charge
 
     if request.method == "POST":
@@ -233,14 +234,32 @@ def checkout(request):
             address.user = request.user
             address.save()
 
+            # ✅ Create order FIRST
             order = Order.objects.create(
                 user=request.user,
                 total_amount=grand_total,
                 status="PENDING"
             )
 
-            # 🔥 DO NOT DELETE CART HERE
+            # ✅ Create ALL order items
+            for item in cart_items:
+                plant = item.product
+
+                image_url = ""
+                if plant.image:
+                    image_url = plant.image.url  # Cloudinary-safe
+
+                OrderItem.objects.create(
+                    order=order,
+                    plant=plant,
+                    quantity=item.quantity,
+                    price=plant.price,
+                    plant_image_url=image_url
+                )
+
+            # ✅ Redirect AFTER loop
             return redirect("start_payment", order_id=order.id)
+
     else:
         form = CheckoutForm()
 
@@ -311,34 +330,69 @@ def decrease_qty(request, item_id):
         item.delete()
     return redirect("view_cart")
 
-@login_required
+@require_POST
 def add_to_cart(request, pk):
     product = get_object_or_404(Plant, pk=pk)
 
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    # ✅ CASE 1: Logged-in user → DB cart
+    if request.user.is_authenticated:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
 
-    item, created = CartItem.objects.get_or_create(
-        cart=cart,
-        product=product
+        item, created = CartItem.objects.get_or_create(
+            cart=cart,
+            product=product
+        )
+
+        item.quantity = item.quantity + 1 if not created else 1
+        item.save()
+
+    # ✅ CASE 2: Guest user → Session cart
+    else:
+        cart = request.session.get("cart", {})
+        cart[str(pk)] = cart.get(str(pk), 0) + 1
+        request.session["cart"] = cart
+        request.session.modified = True
+
+    messages.success(
+        request,
+        mark_safe('Item added to cart. <a href="/cart/" style="font-weight:bold;">View Cart</a>')
     )
 
-    if not created:
-        item.quantity += 1
-    else:
-        item.quantity = 1
+    return redirect(request.META.get("HTTP_REFERER", "home"))
 
-    item.save()
 
-    return redirect("view_cart")
-
-@login_required
 def view_cart(request):
+
+    # ---------- GUEST USER ----------
+    if not request.user.is_authenticated:
+        cart = request.session.get('cart', {})
+        items = []
+        total = 0
+
+        for pk, qty in cart.items():
+            plant = get_object_or_404(Plant, pk=pk)
+            subtotal = plant.price * qty
+            total += subtotal
+
+            items.append({
+                'product': plant,
+                'quantity': qty,
+                'subtotal': subtotal
+            })
+
+        return render(request, "cart/cart.html", {
+            "items": items,
+            "total": total,
+            "guest": True
+        })
+
+    # ---------- LOGGED-IN USER ----------
     cart, _ = Cart.objects.get_or_create(user=request.user)
     items = cart.items.select_related("product")
-
     total = sum(item.product.price * item.quantity for item in items)
 
     return render(request, "cart/cart.html", {
         "items": items,
-        "total": total
+        "total": total,
+        "guest": False
     })
