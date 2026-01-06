@@ -210,9 +210,11 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 )
 
 # MUST be a list (used by EmailMultiAlternatives)
-ADMIN_EMAIL = [
-    os.environ.get("ADMIN_EMAIL", "naturesuplift71@gmail.com")
-]
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "naturesuplift71@gmail.com")
+
+# Always normalize to list
+if isinstance(ADMIN_EMAIL, str):
+    ADMIN_EMAIL = [ADMIN_EMAIL]
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
