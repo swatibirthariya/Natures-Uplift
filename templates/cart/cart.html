@@ -10,7 +10,7 @@
     <div class="cart-list">
       {% for item in items %}
         <div class="cart-item">
-          
+
           <div class="item-info">
             <h4>{{ item.product.name }}</h4>
             <p class="item-price">
@@ -20,13 +20,25 @@
 
           <div class="item-actions">
             <div class="qty-box">
-              <a href="{% url 'decrease_qty' item.id %}" class="qty-btn">−</a>
-              <input type="text" value="{{ item.quantity }}" readonly>
-              <a href="{% url 'increase_qty' item.id %}" class="qty-btn">+</a>
+
+              {% if user.is_authenticated %}
+                <!-- Logged-in user quantity controls -->
+                <a href="{% url 'decrease_qty' item.id %}" class="qty-btn">−</a>
+                <input type="text" value="{{ item.quantity }}" readonly>
+                <a href="{% url 'increase_qty' item.id %}" class="qty-btn">+</a>
+              {% else %}
+                <!-- Guest user (session cart) -->
+                <input type="text" value="{{ item.quantity }}" readonly>
+              {% endif %}
+
             </div>
 
             <div class="item-total">
-              ₹{{ item.get_total_price|floatformat:2 }}
+              {% if item.subtotal %}
+                ₹{{ item.subtotal|floatformat:2 }}
+              {% else %}
+                ₹{{ item.get_total_price|floatformat:2 }}
+              {% endif %}
             </div>
           </div>
 
@@ -40,9 +52,18 @@
         <strong>₹{{ total|floatformat:2 }}</strong>
       </div>
 
-      <a href="{% url 'checkout' %}" class="checkout-btn">
-        Proceed to Checkout
-      </a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'checkout' %}" class="checkout-btn">
+          Proceed to Checkout
+        </a>
+      {% else %}
+        <p class="login-note">
+          🔐 Please login to proceed with checkout
+        </p>
+        <a href="{% url 'login' %}?next=/cart/" class="checkout-btn disabled">
+          Login to Checkout
+        </a>
+      {% endif %}
     </div>
 
   {% else %}
