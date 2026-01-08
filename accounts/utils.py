@@ -3,6 +3,9 @@ from plants.models import Plant
 from django.conf import settings
 import requests
 import logging
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -39,32 +42,39 @@ def merge_cart_after_login(request, user):
 # ==========================
 # BREVO EMAIL HELPER
 # ==========================
-def send_email_brevo(subject, html_content, to_emails):
-    url = "https://api.brevo.com/v3/smtp/email"
 
-    payload = {
-        "sender": {
-            "name": "Natures Uplift",
-            "email": "no-reply@naturesuplift.com",
-        },
-        "to": [{"email": email} for email in to_emails],
-        "subject": subject,
-        "htmlContent": html_content,
-    }
+def send_brevo_email(subject, html_content, to_email, to_name="User"):
+    try:
+        if not settings.BREVO_API_KEY:
+            raise Exception("BREVO_API_KEY is missing")
 
-    headers = {
-        "accept": "application/json",
-        "api-key": settings.BREVO_API_KEY,
-        "content-type": "application/json",
-    }
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key = {
+            'api-key': settings.BREVO_API_KEY
+        }
 
-    response = requests.post(url, json=payload, headers=headers, timeout=10)
+        api_client = sib_api_v3_sdk.ApiClient(configuration)
+        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(api_client)
 
-    if response.status_code >= 400:
-        logger.error("❌ Brevo email failed: %s", response.text)
-        return False
+        email = sib_api_v3_sdk.SendSmtpEmail(
+            sender={
+                "name": "natures uplift",
+                "email": "no-reply@naturesuplift.com"
+            },
+            to=[{
+                "email": to_email,
+                "name": to_name
+            }],
+            subject=subject,
+            html_content=html_content,
+        )
 
-    return True
+        api_instance.send_transac_email(email)
+
+    except ApiException as e:
+        print("❌ Brevo API error:", e)
+    except Exception as e:
+        print("❌ Brevo setup error:", e)
 
 
 # ==========================

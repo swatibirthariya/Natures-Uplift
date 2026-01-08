@@ -64,7 +64,14 @@ class Order(models.Model):
         choices=STATUS_CHOICES,
         default="PENDING"
     )
-
+    
+    address = models.ForeignKey(
+    Address,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True
+    )
+    
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
