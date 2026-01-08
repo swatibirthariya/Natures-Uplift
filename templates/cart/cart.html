@@ -44,12 +44,25 @@
       {% endfor %}
     </div>
 
-    <div class="cart-summary">
+   <div class="cart-summary">
       <div class="total-row">
         <span>Total</span>
         <strong>₹{{ total|floatformat:2 }}</strong>
       </div>
+
+      <!-- ✅ ADDED: Proceed to Checkout -->
+      {% if user.is_authenticated %}
+        <a href="{% url 'checkout' %}" class="checkout-btn">
+          Proceed to Checkout
+        </a>
+      {% else %}
+        <a href="{% url 'login' %}?next=/checkout/" class="checkout-btn">
+          Login to Checkout
+        </a>
+      {% endif %}
+      <!-- ✅ END -->
     </div>
+
   {% endif %}
 </div>
 
@@ -86,6 +99,32 @@
       padding: 12px 20px;
     }
   }
+
+    /* ✅ PROCEED TO CHECKOUT BUTTON */
+  .checkout-btn {
+    display: block;
+    margin-top: 16px;
+    text-align: center;
+    padding: 14px 18px;
+    background: #2e7d32;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+
+  .checkout-btn:hover {
+    background: #256628;
+  }
+
+  @media (max-width: 768px) {
+    .checkout-btn {
+      font-size: 15px;
+      padding: 16px;
+    }
+  }
+
 </style>
 
 {% endblock %}
