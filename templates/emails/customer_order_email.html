@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Order Confirmation</title>
+</head>
+<body style="font-family: Arial, sans-serif;">
+    <h2>Thank you for your order 🌱</h2>
+
+    <p>Hi {{ user.first_name|default:user.username }},</p>
+
+    <p>Your order has been placed successfully.</p>
+
+    <hr>
+
+    <p><strong>Order ID:</strong> {{ order.id }}</p>
+    <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+    <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+
+    <hr>
+
+    <p>We will notify you once your order is shipped.</p>
+
+    <p>Regards,<br>
+    <strong>Natures Uplift</strong></p>
+</body>
+</html>
