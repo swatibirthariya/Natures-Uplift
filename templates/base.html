@@ -18,8 +18,14 @@
 
   <script>
     function toggleMenu() {
-      document.getElementById("mobileMenu").classList.toggle("active");
-    }
+  document.getElementById("mobileMenu").classList.toggle("active");
+  document.getElementById("mobileMenuOverlay").classList.toggle("show");
+}
+
+function closeMenu() {
+  document.getElementById("mobileMenu").classList.remove("active");
+  document.getElementById("mobileMenuOverlay").classList.remove("show");
+}    
   </script>
 </head>
 <body>
@@ -35,8 +41,9 @@
 
         <!-- CART ICON -->
         <a href="{% url 'view_cart' %}">
-        <i class="fa-solid fa-cart-shopping"></i> ({{ cart_count }})
-        </a>
+        <i class="fa-solid fa-cart-shopping"></i>
+        (<span id="cart-count">{{ cart_count }}</span>)
+          </a>
         <!-- USER ICON -->
         {% if user.is_authenticated %}
             <a href="{% url 'account_profile' %}" class="icon-btn" title="Logout">
@@ -102,6 +109,7 @@
     <div class="header-right"></div>
 
   </div>
+<div id="mobileMenuOverlay" class="mobile-menu-overlay" onclick="closeMenu()"></div>
   </header>
 
   <!-- Messages -->
@@ -127,3 +135,34 @@
 
 </body>
 </html>
+
+<style>
+/* ======================
+   MOBILE MENU OVERLAY
+====================== */
+.mobile-menu-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-menu-overlay.show {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-menu {
+    z-index: 999;
+  }
+}
+</style>
