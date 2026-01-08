@@ -56,7 +56,7 @@
       </a>
     </div>
   </aside>
-
+  <div id="sidebarOverlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
   <!-- ======================
        MAIN CONTENT
   ======================= -->
@@ -287,6 +287,64 @@ function toggleCategoryDropdown() {
   line-height: 1.4;
   color: #555;
 }
+
+/* ======================
+   SIDEBAR OVERLAY (MOBILE)
+====================== */
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .sidebar-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar {
+    z-index: 999;
+  }
+}
+
 </style>
+
+<script>
+function openImageModal(src) {
+  document.getElementById("modalImage").src = src;
+  document.getElementById("imageModal").style.display = "flex";
+}
+
+function closeImageModal() {
+  document.getElementById("imageModal").style.display = "none";
+}
+
+function toggleSidebar() {
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("sidebarOverlay").classList.toggle("show");
+}
+
+function toggleCategoryDropdown() {
+  document.getElementById("categoryDropdown").classList.toggle("open");
+}
+
+/* ✅ SINGLE FIX LINE */
+if (window.innerWidth <= 768) document.getElementById("categoryDropdown").classList.add("open");
+
+function closeSidebar() {
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("sidebarOverlay").classList.remove("show");
+}
+</script>
 
 {% endblock %}
