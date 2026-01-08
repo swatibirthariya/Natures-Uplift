@@ -2080,6 +2080,7 @@ h1, h2, h3, h4 {
   border-radius: 24px;
 }
 
+
 /* =========================
    MOBILE NAV FIX ONLY
 ========================= */
@@ -2130,56 +2131,70 @@ h1, h2, h3, h4 {
   }
 }
 
-/* =========================
-   MOBILE NAV FIX ONLY
-   ========================= */
+/* ===============================
+   MOBILE MENU — HARD FIX
+   =============================== */
 @media (max-width: 768px) {
 
-  /* Hide desktop nav on mobile */
+  /* Desktop nav OFF */
   .desktop-nav {
-    display: none;
+    display: none !important;
   }
 
-  /* Mobile menu container */
-  .mobile-menu {
-    position: absolute;          /* KEY FIX */
-    top: 100%;                   /* opens below header */
-    left: 0;
-    width: 100%;
-    background: #ffffff;
-    z-index: 9999;
-
-    display: none;               /* hidden by default */
-    flex-direction: column;
-    padding: 10px 0;
-
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-
-  /* When active (menu open) */
-  .mobile-menu.active {
-    display: flex;
-  }
-
-  /* Mobile links */
-  .mobile-menu a {
-    padding: 12px 20px;
-    text-decoration: none;
-    color: #333;
-    border-bottom: 1px solid #eee;
-  }
-
-  .mobile-menu a:last-child {
-    border-bottom: none;
-  }
-
-  /* Menu toggle visible only on mobile */
+  /* Hamburger ON */
   .menu-toggle {
-    display: block;
-    font-size: 22px;
+    display: block !important;
+    font-size: 26px;
     background: none;
     border: none;
     cursor: pointer;
+  }
+
+  /* MOBILE MENU — hidden by default */
+  #mobileMenu {
+    position: fixed !important;
+    top: 64px; /* adjust if header height differs */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 64px);
+    background: #ffffff;
+
+    display: flex !important;
+    flex-direction: column;
+
+    transform: translateY(-120%);
+    transition: transform 0.3s ease;
+
+    z-index: 99999;
+    padding: 16px;
+  }
+
+  /* When active */
+  #mobileMenu.active {
+    transform: translateY(0);
+  }
+
+  /* Menu items */
+  #mobileMenu a {
+    padding: 14px 10px;
+    font-size: 18px;
+    color: #2e7d32;
+    text-decoration: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  #mobileMenu a:last-child {
+    border-bottom: none;
+  }
+
+  /* Prevent content shift */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Optional: cleaner mobile header */
+  .cart-fixed {
+    display: none !important;
   }
 }
 
