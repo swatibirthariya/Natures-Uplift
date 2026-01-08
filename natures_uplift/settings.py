@@ -188,33 +188,11 @@ LOGIN_REDIRECT_URL = '/'       # redirect after login
 LOGOUT_REDIRECT_URL = '/'      # redirect after logout
 
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY")
 
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
-EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
-EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True") == "True"
+DEFAULT_FROM_EMAIL = "natures uplift <no-reply@naturesuplift.com>"
 
-EMAIL_HOST_USER = os.environ.get(
-    "EMAIL_HOST_USER",
-    "naturesuplift.otp@gmail.com"
-)
-
-EMAIL_HOST_PASSWORD = os.environ.get(
-    "EMAIL_HOST_PASSWORD",
-    "nbduperlbgosefqv"
-)
-
-DEFAULT_FROM_EMAIL = os.environ.get(
-    "DEFAULT_FROM_EMAIL",
-    "Natures Uplift <naturesuplift.otp@gmail.com>"
-)
-
-# MUST be a list (used by EmailMultiAlternatives)
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "naturesuplift71@gmail.com")
-
-# Always normalize to list
-if isinstance(ADMIN_EMAIL, str):
-    ADMIN_EMAIL = [ADMIN_EMAIL]
+ADMIN_EMAIL = ["naturesuplift71@gmail.com"]
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
