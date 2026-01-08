@@ -4,7 +4,6 @@ from django.contrib import messages
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.core.mail import send_mail, EmailMultiAlternatives
 from django.db import transaction
 
 from .models import Payment
@@ -13,15 +12,60 @@ from accounts.models import Order, CartItem
 import threading
 import logging
 
+# Brevo imports
+from sib_api_v3_sdk import Configuration, ApiClient
+from sib_api_v3_sdk.api.transactional_emails_api import TransactionalEmailsApi
+from sib_api_v3_sdk.models import SendSmtpEmail
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+
 logger = logging.getLogger(__name__)
 
 UPI_ID = "6366382516@ybl"
 
 
 # ==============================
-# EMAIL (ASYNC + RENDER SAFE)
+# BREVO EMAIL HELPER
 # ==============================
-def send_order_emails(order):
+def send_brevo_email(subject, html_content, to_email, to_name="User"):
+    try:
+        if not settings.BREVO_API_KEY:
+            raise Exception("BREVO_API_KEY is missing")
+
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key = {
+            'api-key': settings.BREVO_API_KEY  # 🔥 THIS IS CRITICAL
+        }
+
+        api_client = sib_api_v3_sdk.ApiClient(configuration)
+        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(api_client)
+
+        email = sib_api_v3_sdk.SendSmtpEmail(
+           sender={
+            "name": "natures uplift",
+            "email": "no-reply@naturesuplift.com"
+         },
+            to=[{
+                "email": to_email,
+                "name": to_name
+            }],
+            subject=subject,
+            html_content=html_content,
+        )
+
+        api_instance.send_transac_email(email)
+        print("✅ Brevo email sent to:", to_email)
+
+    except ApiException as e:
+        print("❌ Brevo API error:", e)
+    except Exception as e:
+        print("❌ Brevo setup error:", e)
+
+
+# ==============================
+# SEND ORDER EMAILS
+# ==============================
+def _send_order_emails(order):
     user = order.user
     items = order.items.all()
 
@@ -29,56 +73,36 @@ def send_order_emails(order):
     # CUSTOMER EMAIL
     # --------------------
     if user.email:
-        try:
-            send_mail(
-                subject="Your order with Natures Uplift 🌱",
-                message=f"""
-Hi {user.first_name or user.username},
+        html_content = render_to_string(
+            "emails/customer_order_email.html",
+            {
+                "order": order,
+                "user": user,
+            }
+        )
 
-Thank you for shopping with Natures Uplift 🌿
-
-Order ID: {order.id}
-Total Amount: ₹{order.total_amount}
-Payment Method: {order.payment_method}
-
-Your order is currently being processed.
-We will notify you once it is shipped.
-
-Regards,
-Natures Uplift
-""",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-            )
-        except Exception as e:
-            print("❌ Customer email failed:", e)
+        send_brevo_email(
+            subject="Your order with Natures Uplift 🌱",
+            html_content=html_content,
+            to_email=user.email,
+        )
 
     # --------------------
     # ADMIN EMAIL
     # --------------------
-    try:
-        html_content = render_to_string(
-            "emails/admin_order_email.html",
-            {
-                "order": order,
-                "items": items,
-            }
-        )
+    html_content = render_to_string(
+        "emails/admin_order_email.html",
+        {
+            "order": order,
+            "items": items,
+        }
+    )
 
-        text_content = strip_tags(html_content)
-
-        email = EmailMultiAlternatives(
-            subject="New Order Received – Natures Uplift 🌱",
-            body=text_content,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=settings.ADMIN_EMAIL,  # ✅ MUST be list
-        )
-
-        email.attach_alternative(html_content, "text/html")
-        email.send()
-
-    except Exception as e:
-        print("❌ Admin email failed:", e)
+    send_brevo_email(
+        subject="New Order Received – Natures Uplift 🌱",
+        html_content=html_content,
+        to_email=settings.ADMIN_EMAIL[0],
+    )
 
 
 def send_order_emails_async(order):
