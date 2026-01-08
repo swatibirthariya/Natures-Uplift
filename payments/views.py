@@ -68,6 +68,7 @@ def send_brevo_email(subject, html_content, to_email, to_name="User"):
 def _send_order_emails(order):
     user = order.user
     items = order.items.all()
+    payment = Payment.objects.filter(order=order).first()
 
     # --------------------
     # CUSTOMER EMAIL
@@ -95,6 +96,7 @@ def _send_order_emails(order):
         {
             "order": order,
             "items": items,
+            "payment": payment
         }
     )
 
