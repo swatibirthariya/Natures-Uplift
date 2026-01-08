@@ -48,13 +48,13 @@ INSTALLED_APPS = [
     "cloudinary_storage",
 
     "plants",
-    "payments",
     "django.contrib.sites",          # Required
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.facebook",
+    "payments.apps.PaymentsConfig",
 ]
 
 
