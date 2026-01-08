@@ -155,13 +155,7 @@ def forgot_password(request):
         request.session["reset_user_id"] = user.id
         request.session["reset_otp"] = otp
         request.session["otp_time"] = time.time()
-
-        send_mail(
-            "Reset Password OTP – Natures Uplift 🌱",
-            f"Your OTP is {otp}. Valid for 5 minutes.",
-            settings.DEFAULT_FROM_EMAIL,
-            [user.email],
-        )
+        send_otp_email(user.email, otp)
 
         messages.success(request, "OTP sent to your registered email")
         return redirect("verify_otp")
@@ -355,11 +349,10 @@ def add_to_cart(request, pk):
 
     messages.success(
         request,
-        mark_safe('Item added to cart. <a href="/cart/" style="font-weight:bold;">View Cart</a>')
+        mark_safe('Item added to cart.')
     )
-
-    return redirect(request.META.get("HTTP_REFERER", "home"))
-
+    # ✅ THIS IS THE FIX
+    return redirect("/cart/")
 
 def view_cart(request):
 
