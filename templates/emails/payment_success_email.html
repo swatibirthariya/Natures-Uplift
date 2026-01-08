@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif;">
+
+<h2>✅ Payment Confirmed 🌱</h2>
+
+<p>Hi {{ user.first_name|default:user.username }},</p>
+
+<p>We have successfully verified your payment.</p>
+
+<hr>
+
+<p><strong>Order ID:</strong> {{ order.id }}</p>
+<p><strong>Amount Paid:</strong> ₹{{ payment.amount }}</p>
+<p><strong>UTR Number:</strong> {{ payment.utr_number }}</p>
+
+<hr>
+
+<p>Your order is now being processed and will be shipped soon.</p>
+
+<p>Thank you for shopping with us 💚</p>
+
+<p>
+<strong>Natures Uplift</strong>
+</p>
+
+</body>
+</html>

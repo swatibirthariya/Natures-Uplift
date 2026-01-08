@@ -16,6 +16,10 @@
 <p><strong>Email:</strong> {{ order.user.email }}</p>
 <p><strong>Payment:</strong> {{ order.payment_method }}</p>
 
+{% if payment.utr_number %}
+<p><strong>UTR Number:</strong> {{ payment.utr_number }}</p>
+{% endif %}
+
 <hr>
 
 <h3>🛒 Ordered Items</h3>
@@ -32,6 +36,18 @@
 <hr>
 
 <h3>Total Amount: ₹{{ order.total_amount }}</h3>
+<h3>📦 Delivery Address</h3>
+
+{% if order.address %}
+<p>
+  {{ order.address.full_name }}<br>
+  {{ order.address.address }}<br>
+  {{ order.address.city }} - {{ order.address.pincode }}<br>
+  Phone: {{ order.address.phone }}
+</p>
+{% else %}
+<p><strong>⚠️ Address not provided</strong></p>
+{% endif %}
 
 </body>
 </html>

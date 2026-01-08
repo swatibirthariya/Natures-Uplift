@@ -17,9 +17,32 @@
     <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
     <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
 
+    {% if payment.utr_number %}
+    <p><strong>Your UTR Number:</strong> {{ payment.utr_number }}</p>
+    {% endif %}
+
     <hr>
 
+    {% if order.address %}
+    <h3>📦 Delivery Address</h3>
+    <p>
+        {{ order.address.full_name }}<br>
+        {{ order.address.address }}<br>
+        {{ order.address.city }} - {{ order.address.pincode }}<br>
+        Phone: {{ order.address.phone }}
+    </p>
+    <hr>
+    {% endif %}
+
+    {% if order.payment_method == "UPI" %}
+    <p>
+        We have received your order.<br>
+        <strong>Your payment is under verification.</strong><br>
+        Once verified, we will send you a confirmation email.
+    </p>
+    {% else %}
     <p>We will notify you once your order is shipped.</p>
+    {% endif %}
 
     <p>Regards,<br>
     <strong>Natures Uplift</strong></p>
