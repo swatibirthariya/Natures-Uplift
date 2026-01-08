@@ -6,33 +6,32 @@
 
   <h2 class="cart-title">Your Cart</h2>
 
+  <!-- ✅ ADDED: Return to Home button -->
+  <div class="cart-nav">
+    <a href="{% url 'home' %}" class="return-home-btn">
+      ⬅ Return to Home
+    </a>
+  </div>
+  <!-- ✅ END -->
+
   {% if items %}
     <div class="cart-list">
       {% for item in items %}
         <div class="cart-item">
-
           <div class="item-info">
             <h4>{{ item.product.name }}</h4>
-            <p class="item-price">
-              ₹{{ item.product.price|floatformat:2 }} each
-            </p>
+            <p class="item-price">₹{{ item.product.price|floatformat:2 }} each</p>
           </div>
-
           <div class="item-actions">
             <div class="qty-box">
-
               {% if user.is_authenticated %}
-                <!-- Logged-in user quantity controls -->
                 <a href="{% url 'decrease_qty' item.id %}" class="qty-btn">−</a>
                 <input type="text" value="{{ item.quantity }}" readonly>
                 <a href="{% url 'increase_qty' item.id %}" class="qty-btn">+</a>
               {% else %}
-                <!-- Guest user (session cart) -->
                 <input type="text" value="{{ item.quantity }}" readonly>
               {% endif %}
-
             </div>
-
             <div class="item-total">
               {% if item.subtotal %}
                 ₹{{ item.subtotal|floatformat:2 }}
@@ -41,7 +40,6 @@
               {% endif %}
             </div>
           </div>
-
         </div>
       {% endfor %}
     </div>
@@ -51,27 +49,43 @@
         <span>Total</span>
         <strong>₹{{ total|floatformat:2 }}</strong>
       </div>
-
-      {% if user.is_authenticated %}
-        <a href="{% url 'checkout' %}" class="checkout-btn">
-          Proceed to Checkout
-        </a>
-      {% else %}
-        <p class="login-note">
-          🔐 Please login to proceed with checkout
-        </p>
-        <a href="{% url 'login' %}?next=/cart/" class="checkout-btn disabled">
-          Login to Checkout
-        </a>
-      {% endif %}
     </div>
-
-  {% else %}
-    <p class="empty-cart">
-      Your cart is empty.
-      <a href="{% url 'plant_list' %}">Shop now</a>
-    </p>
   {% endif %}
-
 </div>
+
+<style>
+  /* Desktop default */
+  .cart-nav {
+    position: fixed;
+    bottom: 24px;        /* ⬆ slightly up */
+    left: 24px;
+    z-index: 999;
+  }
+
+  /* Button styling */
+  .return-home-btn {
+    display: inline-block;
+    padding: 10px 16px;
+    background: #ffffff;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  }
+
+  /* ✅ MOBILE OPTIMIZATION */
+  @media (max-width: 768px) {
+    .cart-nav {
+      left: 50%;
+      bottom: 32px;      /* ⬆ higher for thumb comfort */
+      transform: translateX(-50%);
+    }
+
+    .return-home-btn {
+      font-size: 14px;
+      padding: 12px 20px;
+    }
+  }
+</style>
+
 {% endblock %}
