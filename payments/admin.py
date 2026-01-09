@@ -1,69 +1,41 @@
 from django.contrib import admin
-from .models import Payment
 from django.utils.html import format_html
-from django.template.loader import render_to_string
-
-# 🔥 IMPORT YOUR BREVO HELPER
-from accounts.utils import send_brevo_email
+from .models import Order, OrderItem, CustomUser, Address
 
 
-@admin.register(Payment)
-class PaymentAdmin(admin.ModelAdmin):
+admin.site.register(CustomUser)
+admin.site.register(Address)
 
-    # ✅ KEEP + ADD (do not remove anything you already have)
-    list_display = (
-        "order",
-        "user",
-        "amount",
-        "utr_number",
-        "status",
-        "created_at",
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    readonly_fields = (
+        'plant',
+        'quantity',
+        'price',
+        'plant_image_preview'
     )
 
-    list_filter = ("status", "created_at")
-    search_fields = ("order__id", "utr_number", "user__email")
-
-    actions = ["verify_payment_and_notify"]
-
-    # ==============================
-    # ✅ ADMIN ACTION
-    # ==============================
-    def verify_payment_and_notify(self, request, queryset):
-        for payment in queryset:
-
-            # Skip already verified payments
-            if payment.status == "SUCCESS":
-                continue
-
-            # ✅ Update payment
-            payment.status = "SUCCESS"
-            payment.save()
-
-            # ✅ Update order
-            order = payment.order
-            order.status = "PAID"
-            order.payment_method = "UPI"
-            order.save()
-
-            # ==============================
-            # ✅ CUSTOMER EMAIL (BREVO)
-            # ==============================
-            html_content = render_to_string(
-                "emails/payment_success_email.html",
-                {
-                    "order": order,
-                    "payment": payment,
-                    "user": order.user,
-                }
-                )
-
-            send_brevo_email(
-                subject="Payment Verified – Natures Uplift 🌱",
-                html_content=html_content,
-                to_email=order.user.email,
-                to_name=order.user.first_name or "Customer",
+    def plant_image_preview(self, obj):
+        if obj.plant_image_url:
+            return format_html(
+                '<img src="{}" width="60" style="border-radius:6px;" />',
+                obj.plant_image_url
             )
+        return "-"
 
-    verify_payment_and_notify.short_description = (
-        "✅ Verify payment & send confirmation email"
+    plant_image_preview.short_description = "Plant Image"
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'user',
+        'total_amount',
+        'status',
+        'created_at'
     )
+    list_filter = ('status', 'created_at')
+    inlines = [OrderItemInline]
