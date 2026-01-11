@@ -61,37 +61,51 @@
 
     {% for item in items %}
       <div class="cart-row">
-        <span>{{ item.product.name }} × {{ item.quantity }}</span>
-        <span>₹{{ item.get_total_price|floatformat:2 }}</span>
+      <div>
+        <span>{{ item.product.name }}</span>
+        <small>
+          ₹{{ item.product.price }} × {{ item.quantity }}
+        </small>
       </div>
+      <span>₹{{ item.get_total_price|floatformat:2 }}</span>
+    </div>
     {% endfor %}
 
     <hr>
 
-    <div class="summary-row">
-      <span>Subtotal</span>
-      <span>₹<span id="subtotal">{{ subtotal }}</span></span>
-    </div>
-
-    <div class="summary-row">
-      <span>Delivery</span>
-      <span>₹<span id="delivery">{{ delivery_charge }}</span></span>
-    </div>
-
-    <div class="summary-row total">
-      <span>Total</span>
-      <span>₹<span id="grand-total">{{ grand_total }}</span></span>
-    </div>
+  <div class="summary-row">
+  <span>Subtotal</span>
+  <span>₹<span id="subtotal">{{ subtotal }}</span></pan>
+  <input type="hidden" id="effective-subtotal" value="{{ effective_subtotal }}">
   </div>
+    <!-- offer section removable -->
+      {% include "cart/_offers_summary.html" %}
+     <!-- offer section removable -->
+      <div class="summary-row">
+        <span>Delivery</span>
+        <span>₹<span id="delivery">{{ delivery_charge }}</span></span>
+      </div>
+
+      <div class="summary-row total">
+        <span>Total</span>
+        <span>₹<span id="grand-total">{{ grand_total }}</span></span>
+      </div>
+
+     </div>
 
 </div>
 
 <script>
 function updateTotal(delivery) {
-  const subtotal = parseFloat(document.getElementById("subtotal").innerText);
+  const effectiveSubtotalInput = document.getElementById("effective-subtotal");
+  const base = effectiveSubtotalInput
+    ? parseFloat(effectiveSubtotalInput.value)
+    : parseFloat(document.getElementById("subtotal").innerText);
+
   document.getElementById("delivery").innerText = delivery;
-  document.getElementById("grand-total").innerText = (subtotal + delivery).toFixed(2);
+  document.getElementById("grand-total").innerText = (base + delivery).toFixed(2);
 }
 </script>
-
 {% endblock %}
+
+

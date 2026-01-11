@@ -1,0 +1,52 @@
+{% if offer and discount > 0 %}
+
+<!-- OFFER CARD -->
+<div class="offer-card">
+  <div class="offer-left">
+    <span class="offer-badge">OFFER</span>
+    <div>
+      <strong>{{ offer.title }}</strong>
+      <p>{{ offer.description }}</p>
+    </div>
+  </div>
+
+  <div class="offer-right">
+    <span class="offer-discount">-₹{{ discount }}</span>
+  </div>
+</div>
+
+<!-- SUBTOTAL AFTER DISCOUNT -->
+<div class="summary-row">
+  <span>Subtotal after discount</span>
+  <span>₹{{ effective_subtotal }}</span>
+</div>
+
+<!-- FLOATING CELEBRATION TOAST -->
+<div id="offer-toast">
+  <span class="toast-icon">🎉</span>
+  <div class="toast-text">
+    <strong>Offer Unlocked!</strong>
+    <p>You saved ₹{{ discount }} with {{ offer.title }}</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  const key = "offerShown-{{ offer.id }}";
+  const toast = document.getElementById("offer-toast");
+
+  if (!toast || sessionStorage.getItem(key)) return;
+
+  // Show toast
+  toast.classList.add("show");
+
+  // Hide after 4s
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 4000);
+
+  sessionStorage.setItem(key, "true");
+})();
+</script>
+
+{% endif %}

@@ -43,7 +43,12 @@
         </div>
       {% endfor %}
     </div>
-
+      {% if offer and discount > 0 %}
+      <div class="summary-row offer">
+        <span>{{ offer.title }}</span>
+        <span>You save ₹{{ discount }}</span>
+      </div>
+    {% endif %}
    <div class="cart-summary">
       <div class="total-row">
         <span>Total</span>
