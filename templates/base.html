@@ -6,6 +6,7 @@
   <title>Natures Uplift - {% block title %}{% endblock %}</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/offers.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <!-- Messages styling -->
@@ -32,7 +33,7 @@ function closeMenu() {
 
   <!-- Top bar -->
   <div class="top-bar">
-    Free Delivery Above ₹499 | Next Day Delivery Available
+   {% include "offers/top_offer_bar.html" %}
   </div>
 
   <!-- Icon bar -->
