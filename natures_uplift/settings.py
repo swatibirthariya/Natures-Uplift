@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.facebook",
     "payments.apps.PaymentsConfig",
+    "offers",
 ]
 
 
