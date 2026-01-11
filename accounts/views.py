@@ -29,6 +29,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from plants.models import Plant
+from offers.offer_engine import get_active_offer, apply_bogo
 
 
 @login_required
@@ -215,11 +216,21 @@ def checkout(request):
         messages.error(request, "Your cart is empty.")
         return redirect("view_cart")
 
+    #subtotal = sum(item.get_total_price() for item in cart_items)
+    offer = get_active_offer()
     subtotal = sum(item.get_total_price() for item in cart_items)
-    delivery_type = request.POST.get("delivery_type", "fast")
 
+    discount = 0
+    if offer and offer["type"] == "BUY_TWO_GET_ONE":
+        discount = apply_bogo(cart_items)
+
+    effective_subtotal = subtotal - discount
+
+    delivery_type = request.POST.get("delivery_type", "fast")
+    
     delivery_charge = 85 if delivery_type == "fast" else 60
-    grand_total = subtotal + delivery_charge
+    grand_total = effective_subtotal + delivery_charge
+    #grand_total = subtotal + delivery_charge
 
     if request.method == "POST":
         form = CheckoutForm(request.POST)
@@ -232,7 +243,8 @@ def checkout(request):
             order = Order.objects.create(
                 user=request.user,
                 total_amount=grand_total,
-                status="PENDING"
+                status="PENDING",
+                address=address
             )
 
             # ✅ Create ALL order items
@@ -258,12 +270,15 @@ def checkout(request):
         form = CheckoutForm()
 
     return render(request, "cart/checkout.html", {
-        "form": form,
-        "items": cart_items,
-        "subtotal": subtotal,
-        "delivery_charge": delivery_charge,
-        "grand_total": grand_total,
-    })
+    "form": form,
+    "items": cart_items,
+    "subtotal": subtotal,
+    "discount": discount,
+    "effective_subtotal": effective_subtotal,
+    "delivery_charge": delivery_charge,
+    "grand_total": grand_total,
+    "offer": offer,
+   })
 
 
 
@@ -352,7 +367,7 @@ def add_to_cart(request, pk):
         mark_safe('Item added to cart.')
     )
     # ✅ THIS IS THE FIX
-    return redirect("/cart/")
+    return redirect(request.META.get("HTTP_REFERER", "/"))
 
 def view_cart(request):
 

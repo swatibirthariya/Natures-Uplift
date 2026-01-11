@@ -39,4 +39,3 @@ class OrderAdmin(admin.ModelAdmin):
     )
     list_filter = ('status', 'created_at')
     inlines = [OrderItemInline]
-
