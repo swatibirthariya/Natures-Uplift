@@ -11,6 +11,7 @@ from accounts.models import Order, CartItem
 
 import threading
 import logging
+import re
 
 # Brevo imports
 from sib_api_v3_sdk import Configuration, ApiClient
@@ -66,6 +67,8 @@ def send_brevo_email(subject, html_content, to_email, to_name="User"):
 # SEND ORDER EMAILS
 # ==============================
 def _send_order_emails(order):
+    order = Order.objects.select_related("address").get(id=order.id)
+    #print("EMAIL DEBUG (after refresh):", order.id, order.address)
     user = order.user
     items = order.items.all()
     payment = Payment.objects.filter(order=order).first()
@@ -79,6 +82,7 @@ def _send_order_emails(order):
             {
                 "order": order,
                 "user": user,
+                "payment": payment,
             }
         )
 
@@ -130,7 +134,7 @@ def start_payment(request, order_id):
         },
     )
 
-    gpay_link = (
+    '''gpay_link = (
         "tez://upi/pay"
         f"?pa={UPI_ID}"
         "&pn=NaturesUplift"
@@ -144,7 +148,7 @@ def start_payment(request, order_id):
         "&pn=NaturesUplift"
         f"&am={order.total_amount}"
         "&cu=INR"
-    )
+    )'''
 
     return render(
         request,
@@ -152,11 +156,14 @@ def start_payment(request, order_id):
         {
             "order": order,
             "payment": payment,
-            "gpay_link": gpay_link,
-            "phonepe_link": phonepe_link,
+            #"gpay_link": gpay_link,
+            #"phonepe_link": phonepe_link,
         },
     )
 
+
+def is_valid_utr(utr):
+    return bool(re.match(r"^[A-Za-z0-9]{12,23}$", utr))
 
 # ==============================
 # SUBMIT UTR (UPI)
@@ -167,10 +174,13 @@ def submit_utr(request, order_id):
     order = payment.order
 
     if request.method == "POST":
-        utr = request.POST.get("utr")
+        utr = request.POST.get("utr", "").strip()
 
-        if not utr:
-            messages.error(request, "Please enter payment reference")
+        if not is_valid_utr(utr):
+            messages.error(
+                request,
+                "Invalid UTR number. Please check and enter a valid transaction ID."
+            )
             return redirect("start_payment", order_id=order_id)
 
         with transaction.atomic():
