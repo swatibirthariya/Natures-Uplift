@@ -7,14 +7,16 @@
   <h2>Complete Your Payment</h2>
 
   <p><strong>Order ID:</strong> {{ order.id }}</p>
-  <p><strong>Amount:</strong> ₹{{ order.total_amount }}</p>
+  <div class="amount-highlight">
+    Amount: ₹{{ order.total_amount }}
+  </div>
 
   <hr>
 
-  <!-- 🔹 UPI SECTION -->
-  <h3>Pay using UPI Apps</h3>
+  <!-- 🔹 UPI SECTION (Hidden App Buttons – kept for safety)
+  <h3>Pay using UPI</h3>
 
-  <div class="upi-apps">
+  <div class="upi-apps" style="display:none;">
     <a href="{{ gpay_link }}" class="upi-app-btn">
       <img src="{% static 'images/gpay.webp' %}" alt="Google Pay">
     </a>
@@ -22,13 +24,21 @@
     <a href="{{ phonepe_link }}" class="upi-app-btn">
       <img src="{% static 'images/phonepe.webp' %}" alt="PhonePe">
     </a>
-  </div>
+  </div>-->
 
   <p class="upi-note">
     🔐 Secure UPI payment  
     <br>
-    App buttons work on Android. QR works on all devices.
+    Please scan the QR or copy the UPI ID below.
   </p>
+
+  <div class="upi-card" onclick="copyUpi()">
+  <span class="upi-label">UPI ID</span>
+  <div class="upi-row">
+    <span id="upiId" class="upi-text">naturesuplift@ybl</span>
+    <span class="copy-icon">⧉</span>
+  </div>
+</div>
 
   <hr>
 
@@ -36,7 +46,7 @@
   <h3>Scan & Pay</h3>
   <div class="qr-box">
     <img src="{% static 'images/scanner.png' %}" alt="UPI QR Code">
-    <small>Scan using Google Pay / PhonePe / Paytm</small>
+    <small>Scan using any UPI app (GPay / PhonePe / Paytm / BHIM)</small>
   </div>
 
   <hr>
@@ -69,4 +79,22 @@
 
 </div>
 
+<!-- 🔹 JS -->
+<script>
+function copyUPI() {
+  const upi = document.getElementById("upi-id").innerText;
+  navigator.clipboard.writeText(upi);
+  alert("UPI ID copied");
+}
+</script>
+
+<script>
+function copyUpi() {
+  const text = document.getElementById("upiId").innerText;
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text);
+  }
+}
+</script>
 {% endblock %}
