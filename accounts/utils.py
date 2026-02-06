@@ -94,7 +94,7 @@ def send_otp_email(email, otp):
     <p>Regards,<br><strong>Natures Uplift</strong></p>
     """
 
-    return send_brevo_email((
+    return send_brevo_email(
         subject=subject,
         html_content=body,
         to_emails=[email],
