@@ -199,3 +199,12 @@ LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://www.naturesuplift.com",
+    "https://*.naturesuplift.com",
+]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
