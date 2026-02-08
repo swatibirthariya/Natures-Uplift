@@ -97,7 +97,8 @@ def send_otp_email(email, otp):
     return send_brevo_email(
         subject=subject,
         html_content=body,
-        to_emails=[email],
+        to_email=email,     # ✅ FIXED
+        to_name="User",
     )
 
 
