@@ -106,6 +106,8 @@ def register(request):
 
             # ✅ ALWAYS set username
             user.username = user.phone or user.email
+            user.first_name = form.cleaned_data.get("first_name", "")
+            name = user.first_name
             user.set_password(form.cleaned_data['password1'])
             user.save()
 
@@ -123,7 +125,7 @@ def register(request):
 
             messages.success(
                 request,
-                f"Welcome {user.username}! Your account has been created."
+                f"Welcome {name}! Your account has been created."
             )
             return redirect('home')
         else:
