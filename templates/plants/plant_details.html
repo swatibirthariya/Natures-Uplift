@@ -15,7 +15,7 @@
  <img src="/static/images/ai_placeholder.jpg" alt="{{ plant.name }}" class="product-image">
  {% endif %}
   <div class="product-info">
-    <p class="product-description">{{ plant.description }}</p>
+    <p class="plant-desc">{{ plant.description }}</p>
     <p><strong>Size:</strong> {{ plant.size }}</p>
     <p class="product-price">₹{{ plant.price }}</p>
     <form method="post" action="{% url 'add_to_cart' p.pk %}">
@@ -29,15 +29,15 @@
   <img id="modalImage">
 </div>
 
+<!-- ✅ JS (HERE) -->
+
 <style>
 .plant-desc {
   font-weight: 400;
   color: #555;
   line-height: 1.5;
 }
-</st
 </style>
-<!-- ✅ JS (HERE) -->
 <script>
 function openImageModal(src) {
     document.getElementById("modalImage").src = src;
