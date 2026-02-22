@@ -115,8 +115,12 @@
           <button type="submit" class="btn">Add to cart</button>
         </form>
       </div>
-      {% empty %}
-        <p>No plants found.</p>
+    {% empty %}
+         <div class="empty-state">
+        <h3>🌿 Upcoming Plants</h3>
+        <p>We’re preparing something green and beautiful for you.</p>
+        <a href="{% url 'plant_list' %}" class="btn">Explore All Plants</a>
+      </div>
       {% endfor %}
     </div>
 
