@@ -107,15 +107,17 @@
 
         <h3>{{ p.name }}</h3>
         <p class="plant-desc">{{ p.description }}</p>
-        <p><strong>Size:</strong> {{ p.size }}</p>
-        <p><strong>Price:</strong> ₹{{ p.price }}</p>
+        <div class="meta">
+        <span>Size: {{ p.size }}</span>
+        <span class="price">₹{{ p.price }}</span>
+      </div>
 
         <form method="post" action="{% url 'add_to_cart' p.pk %}">
           {% csrf_token %}
           <button type="submit" class="btn">Add to cart</button>
         </form>
       </div>
-    {% empty %}
+      {% empty %}
          <div class="empty-state">
         <h3>🌿 Upcoming Plants</h3>
         <p>We’re preparing something green and beautiful for you.</p>
@@ -350,6 +352,9 @@ function toggleCategoryDropdown() {
   min-height: 38px;  /* adjust if needed */
 }
 
+.plant-desc {
+    font-weight: 400 !important;
+}
 /* Push price + button to bottom */
 .card form {
   margin-top: auto;
@@ -401,6 +406,7 @@ function toggleCategoryDropdown() {
   border-radius: 12px;
   margin-bottom: 12px;
 }
+
 </style>
 
 <script>
@@ -430,5 +436,4 @@ function closeSidebar() {
   document.getElementById("sidebarOverlay").classList.remove("show");
 }
 </script>
-
 {% endblock %}
