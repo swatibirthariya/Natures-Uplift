@@ -21,7 +21,7 @@
       Don't have an account?
       <a href="{% url 'register' %}">Create account</a>
     </p>
-
+    <<!--
     <div class="social-login">
       <a href="{% url 'social_login' 'facebook' %}" class="social-btn fb">
         <i class="fa-brands fa-facebook-f"></i> Facebook
@@ -29,7 +29,7 @@
       <a href="{% url 'social_login' 'google' %}" class="social-btn google">
         <i class="fa-brands fa-google"></i> Google
       </a>
-    </div>
+    </div>-->
 
     <form method="post" class="auth-form">
       {% csrf_token %}
