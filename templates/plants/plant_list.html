@@ -316,7 +316,40 @@ function toggleCategoryDropdown() {
     z-index: 999;
   }
 }
+/* ===============================
+   CLEAN 2-COLUMN ALIGNMENT FIX
+================================= */
 
+/* Make all cards equal height */
+.grid {
+  align-items: stretch;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  text-align: left; /* remove center */
+  padding: 14px;
+}
+
+/* Force all text left aligned inside card */
+.card h3,
+.card p,
+.card strong {
+  text-align: left !important;
+}
+
+/* Keep description height equal */
+.plant-desc {
+  min-height: 38px;  /* adjust if needed */
+}
+
+/* Push price + button to bottom */
+.card form {
+  margin-top: auto;
+}
 </style>
 
 <script>
