@@ -75,23 +75,63 @@ class CheckoutForm(forms.ModelForm):
     
 # ===== Registration Form =====
 class RegisterForm(UserCreationForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First name'}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Last name'}))
-    phone = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Mobile number'}), required=False)
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}), required=False)
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm password'}))
+    first_name = forms.CharField(
+        label="First Name",
+        widget=forms.TextInput(attrs={'placeholder': 'Enter your first name'})
+    )
+
+    last_name = forms.CharField(
+        label="Last Name",
+        widget=forms.TextInput(attrs={'placeholder': 'Enter your last name'})
+    )
+
+    phone = forms.CharField(
+        label="Mobile Number",
+        widget=forms.TextInput(attrs={'placeholder': 'Enter 10-digit mobile number'}),
+        required=False
+    )
+
+    email = forms.EmailField(
+        label="Email Address",
+        widget=forms.EmailInput(attrs={'placeholder': 'Enter your email'}),
+        required=False
+    )
+
+    password1 = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={'placeholder': 'Create a password'})
+    )
+
+    password2 = forms.CharField(
+        label="Confirm Password",
+        widget=forms.PasswordInput(attrs={'placeholder': 'Re-enter your password'})
+    )
 
     class Meta:
         model = CustomUser
         fields = ('first_name', 'last_name', 'phone', 'email', 'password1', 'password2')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Remove Django's default long password help text
+        self.fields['password1'].help_text = ""
+        self.fields['password2'].help_text = ""
+
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
         if phone and not re.fullmatch(r'[6-9]\d{9}', phone):
-            raise forms.ValidationError("Enter a valid 10-digit Indian mobile number")
+            raise forms.ValidationError("Enter a valid 10-digit Indian mobile number.")
         return phone
 
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords do not match.")
+
+        return password2
 
 # ===== Login Form =====
 class LoginForm(AuthenticationForm):
