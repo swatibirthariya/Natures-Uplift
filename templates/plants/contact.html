@@ -12,13 +12,15 @@
 <div class="contact-card">
 
   <div class="contact-item">
-    <strong>📧 Email</strong>
-    <p>
-      <a href="mailto:Naturesuplift71@gmail.com">
-        Naturesuplift71@gmail.com
-      </a>
-    </p>
-  </div>
+  <strong>
+    <i class="fa-solid fa-envelope gmail-icon"></i> Email
+  </strong>
+  <p>
+    <a href="mailto:Naturesuplift71@gmail.com">
+      Naturesuplift71@gmail.com
+    </a>
+  </p>
+</div>
 
   <div class="contact-item">
     <strong>📞 Call / WhatsApp</strong>
@@ -31,12 +33,54 @@
        💬 Chat on WhatsApp
     </a>
   </div>
-
+  <div class="contact-item social-item">
+  <a href="https://www.instagram.com/naturesuplift"
+     target="_blank"
+     class="social-link">
+     <i class="fa-brands fa-instagram instagram-icon"></i>
+     @naturesuplift
+  </a>
+</div>
+</div>
   <div class="contact-item">
     <strong>📍 Service Area</strong>
     <p>Bangalore (Home Delivery Available)</p>
   </div>
 
 </div>
+
+<style>
+ /* Gmail Red */
+.gmail-icon {
+  color: #EA4335;
+  margin-right: 6px;
+}
+
+/* Instagram Gradient Effect */
+.instagram-icon {
+  font-size: 18px;
+  background: radial-gradient(circle at 30% 107%, 
+    #fdf497 0%, #fdf497 5%, 
+    #fd5949 45%, #d6249f 60%, 
+    #285AEB 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Keep text professional */
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #2e7d32;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.social-link:hover {
+  opacity: 0.8;
+}
+</style>
 
 {% endblock %}
