@@ -30,7 +30,10 @@ from django.conf import settings
 from django.utils.safestring import mark_safe
 from plants.models import Plant
 from offers.offer_engine import get_active_offer, apply_bogo
+from django.http import HttpResponse
 
+def ping(request):
+    return HttpResponse("OK")
 
 @login_required
 def account_profile(request):
