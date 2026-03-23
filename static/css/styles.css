@@ -2517,3 +2517,14 @@ button[type="submit"] {
 .cart-row small {
   grid-column: 1 / -1;    /* price × qty under name */
 }
+
+:root {
+  --primary: #2e7d32;
+  --primary-dark: #1b5e20;
+  --bg: #f7f9f6;
+  --card-bg: #ffffff;
+  --text: #222;
+  --muted: #666;
+  --border: #e0e0e0;
+}
+
