@@ -81,7 +81,27 @@ def plant_list(request):
     )
 def plant_detail(request, pk):
     plant = get_object_or_404(Plant, pk=pk)
-    return render(request,'plants/plant_detail.html',{'plant':plant})
+
+    # ✅ HANDLE REVIEW SUBMIT
+    if request.method == 'POST':
+        Review.objects.create(
+            plant=plant,  # ✅ VERY IMPORTANT
+            name=request.POST.get('name'),
+            rating=int(request.POST.get('rating', 5)),
+            message=request.POST.get('message'),
+            image=request.FILES.get('image'),
+            approved=True   # or False if you want admin approval
+        )
+        messages.success(request, "Review submitted successfully!")
+        return redirect('plant_detail', pk=pk)
+
+    # ✅ GET ONLY THIS PLANT REVIEWS
+    reviews = plant.reviews.filter(approved=True).order_by('-created_at')
+
+    return render(request, 'plants/plant_details.html', {
+        'plant': plant,
+        'reviews': reviews
+    })
 
 def is_bangalore_pincode(pin):
     if not pin: return False
