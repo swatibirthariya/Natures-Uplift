@@ -1,0 +1,108 @@
+<hr>
+
+<h3>Customer Reviews</h3>
+
+<!-- REVIEW FORM -->
+<div class="review-form-card">
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="text" name="name" placeholder="Your name" required>
+  <input type="number" name="rating" min="1" max="5" value="5">
+  <textarea name="message" placeholder="Write your review..." required></textarea>
+  <input type="file" name="image" accept="image/*">
+  <div class="btn-container">
+    <button class="btn">Submit Review</button>
+  </div>
+</form>
+</div>
+
+<!-- REVIEWS LIST -->
+<div class="reviews-list">
+{% for r in reviews %}
+  <div class="card review-card">
+    <div class="review-header">
+      <strong>{{ r.name }}</strong>
+      <span class="rating">⭐ {{ r.rating }}/5</span>
+    </div>
+    <p>{{ r.message }}</p>
+    <!-- ✅ ADD IMAGE HERE -->
+    {% if r.image %}
+      <img src="{{ r.image.url }}" class="review-img">
+    {% endif %}
+  </div>
+{% empty %}
+  <p>No reviews yet for this plant.</p>
+{% endfor %}
+</div>
+
+<style>
+.review-form-card {
+  background: #f7f9f6;
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.review-form-card input,
+.review-form-card textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.review-card {
+  margin-top: 12px;
+  padding: 12px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.rating {
+  color: #2e7d32;
+  font-weight: 600;
+}
+.review-form-card .btn {
+  display: inline-block;
+  width: auto;
+  padding: 12px 28px;
+  background: #2e7d32;
+  color: white;
+  border-radius: 30px;
+  font-weight: 600;
+  border: none;
+}
+
+.review-img {
+  width: 120px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+.btn {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-block;
+  width: auto;          /* ✅ key fix */
+  min-width: 180px;
+  text-align: center;
+}
+
+.btn:hover {
+  background: #1b5e20;
+}
+.btn-container {
+  text-align: center;
+  margin-top: 15px;
+}
+</style>
