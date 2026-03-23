@@ -97,7 +97,8 @@
     <div class="grid">
       {% for p in plants %}
       <div class="card">
-        <a href="javascript:void(0);" onclick="openImageModal('{{ p.image.url }}')">
+        <a href="{% url 'plant_detail' p.pk %}">
+        <!--<a href="javascript:void(0);" onclick="openImageModal('{{ p.image.url }}')">-->
           {% if p.image %}
             <img src="{{ p.image.url }}" alt="{{ p.name }}">
           {% else %}
@@ -105,8 +106,13 @@
           {% endif %}
         </a>
 
-        <h3>{{ p.name }}</h3>
-        <p class="plant-desc">{{ p.description }}</p>
+        <!--<h3>{{ p.name }}</h3>-->
+        <h3>
+          <a href="{% url 'plant_detail' p.pk %}" class="plant-link">
+            {{ p.name }}
+          </a>
+        </h3>
+        <!--<p class="plant-desc">{{ p.description }}</p>-->
         <div class="meta">
         <span>Size: {{ p.size }}</span>
         <span class="price">₹{{ p.price }}</span>
@@ -143,7 +149,6 @@ function openImageModal(src) {
 function closeImageModal() {
   document.getElementById("imageModal").style.display = "none";
 }
-
 function toggleSidebar() {
   document.getElementById("sidebar").classList.toggle("open");
 }
@@ -151,6 +156,8 @@ function toggleSidebar() {
 function toggleCategoryDropdown() {
   document.getElementById("categoryDropdown").classList.toggle("open");
 }
+
+
 </script>
 
 <style>
@@ -401,10 +408,75 @@ function toggleCategoryDropdown() {
 }
 .card img {
   width: 100%;
-  height: 220px;
+  height: auto;              /* allow natural height */
+  max-height: 260px;         /* optional limit */
+  object-fit: contain;       /* ✅ show full image */
+  background: #f5f5f5;       /* nice background for spacing */
+  border-radius: 12px;
+}
+
+.plant-link {
+  text-decoration: none;
+  color: #222;
+}
+
+.plant-link:hover {
+  color: #2e7d32;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+.card img {
+  width: 100%;
+  height: 180px;
   object-fit: cover;
   border-radius: 12px;
-  margin-bottom: 12px;
+}
+.btn {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+  border: none;
+  width: 100%;
+}
+
+.btn:hover {
+  background: var(--primary-dark);
+}
+
+
+.grid {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.image-modal img {
+  max-width: 95%;
+  max-height: 95%;
+  border-radius: 12px;
+}
+.product-image-section img {
+  width: 400px;
+}
+
+.product-image-section img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;              /* ✅ prevents crop */
+  object-fit: contain;
+  border-radius: 16px;
 }
 
 </style>
