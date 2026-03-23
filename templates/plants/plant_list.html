@@ -194,10 +194,9 @@ function toggleCategoryDropdown() {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 20px;
 }
-
 /* ======================
    MOBILE ONLY
 ====================== */
@@ -216,7 +215,12 @@ function toggleCategoryDropdown() {
   .desktop-only {
     display: none;
   }
-
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
+  }
+}
   .mobile-filter-btn {
     display: inline-block;
   }
@@ -458,8 +462,10 @@ function toggleCategoryDropdown() {
 }
 
 
-.grid {
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+.plants-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);  /* 👈 FORCE 2 columns */
+  gap: 12px;
 }
 
 .image-modal img {
