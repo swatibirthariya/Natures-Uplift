@@ -50,8 +50,20 @@ class Order(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)'''
 
 class Review(models.Model):
+    plant = models.ForeignKey(
+        Plant,
+        on_delete=models.CASCADE,
+        related_name="reviews",
+        null=True,   # ✅ TEMP FIX
+        blank=True   # ✅ TEMP FIX
+    )
+
     name = models.CharField(max_length=120)
     rating = models.PositiveSmallIntegerField(default=5)
     message = models.TextField()
+    image = models.ImageField(upload_to='review_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.name}"
