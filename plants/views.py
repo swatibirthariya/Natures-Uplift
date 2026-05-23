@@ -5,6 +5,8 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import uuid, decimal
 from .models import Plant, Review
+from django.http import JsonResponse
+from .serviceable_pincodes import AVAILABLE_PINCODES
 
 def seed_plants():
     if Plant.objects.count() == 0:
