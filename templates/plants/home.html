@@ -6,6 +6,29 @@
     <p>Fresh indoor plants delivered across Bangalore. Fast delivery option available.</p>
     <p><a class="btn" href="{% url 'plant_list' %}">Shop Plants</a></p>
   </section>
+  <!-- PINCODE CHECK SECTION -->
+  <!-- DELIVERY POPUP -->
+<div id="deliveryPopup" class="popup-overlay">
+  <div class="popup-card">
+    <h2>🌿 Check Delivery Availability</h2>
+    <p>
+      Enter your Bangalore pincode to continue
+    </p>
+    <input
+      type="text"
+      id="pincodeInput"
+      placeholder="Enter 6-digit pincode"
+      maxlength="6"
+    >
+    <button onclick="checkPincode()">
+      Continue
+    </button>
+    <p id="pincodeMessage"></p>
+  </div>
+</div>
+
+    <p id="pincodeMessage"></p>
+</section>
 
   <section class="why-choose">
     <h2>Why Choose Natures Uplift</h2>
@@ -97,6 +120,185 @@
     font-size: 14px;
   }
 }
+
+
+/* ===== DELIVERY POPUP ===== */
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+
+  backdrop-filter: blur(6px);
+}
+
+.popup-card {
+  background: white;
+  width: 90%;
+  max-width: 420px;
+
+  padding: 32px;
+  border-radius: 20px;
+
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+
+  text-align: center;
+
+  animation: popupFade 0.3s ease;
+}
+
+.popup-card h2 {
+  margin-bottom: 12px;
+  color: #1f2937;
+}
+
+.popup-card p {
+  color: #666;
+  margin-bottom: 18px;
+}
+
+.popup-card input {
+  width: 100%;
+  padding: 14px;
+
+  border-radius: 12px;
+  border: 2px solid #4CAF50;
+
+  font-size: 16px;
+
+  margin-bottom: 16px;
+
+  outline: none;
+  box-sizing: border-box;
+}
+
+.popup-card button {
+  width: 100%;
+
+  padding: 14px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #2e7d32;
+  color: white;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.popup-card button:hover {
+  background: #256428;
+}
+
+#pincodeMessage {
+  margin-top: 16px;
+  font-weight: 600;
+}
+
+@keyframes popupFade {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 </style>
 
+<script>
+
+async function checkPincode() {
+
+    const pincode =
+        document.getElementById("pincodeInput").value;
+
+    const message =
+        document.getElementById("pincodeMessage");
+
+    if (pincode.length !== 6) {
+
+        message.innerHTML =
+            "Please enter a valid 6-digit pincode.";
+
+        message.style.color = "red";
+
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `/check-pincode/?pincode=${pincode}`
+        );
+
+        const data = await response.json();
+
+        message.innerHTML = data.message;
+
+        if (data.available) {
+
+            message.style.color = "green";
+
+            // Save pincode
+            localStorage.setItem(
+                "userPincode",
+                pincode
+            );
+
+            // Hide popup after success
+            setTimeout(() => {
+
+                document.getElementById(
+                    "deliveryPopup"
+                ).style.display = "none";
+
+            }, 1200);
+
+        } else {
+
+            message.style.color = "#ff9800";
+        }
+
+    } catch (error) {
+
+        message.innerHTML =
+            "Something went wrong. Please try again.";
+
+        message.style.color = "red";
+    }
+}
+
+/* ===== AUTO SKIP IF ALREADY CHECKED ===== */
+
+window.onload = function() {
+
+    const savedPincode =
+        localStorage.getItem("userPincode");
+
+    if (savedPincode) {
+
+        document.getElementById(
+            "deliveryPopup"
+        ).style.display = "none";
+    }
+};
+</script>
 {% endblock %}
