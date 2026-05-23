@@ -56,6 +56,19 @@ def seed_plants():
         for s in samples:
             Plant.objects.create(**s)
 
+def check_pincode(request):
+    pincode = request.GET.get("pincode")
+
+    if pincode in AVAILABLE_PINCODES:
+        return JsonResponse({
+            "available": True,
+            "message": "Great news! We deliver fresh plants to your area 🌿"
+        })
+
+    return JsonResponse({
+        "available": False,
+        "message": "We’re expanding to your area soon 🌱"
+    })
 
 def home(request):
     if settings.DEBUG:
